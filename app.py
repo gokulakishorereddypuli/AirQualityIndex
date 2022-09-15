@@ -17,8 +17,6 @@ import json
 import requests
 from flask import Flask, render_template, request, redirect, url_for, session
 
-
-# dataset links
 dataset={'city_day':'https://drive.google.com/file/d/158j8UBocM-wzIF29fsiBVAmfwQA2JVIV/view?usp=sharing',
          'city_hour' :'https://drive.google.com/file/d/1vNRx81y6CehUR81t9oNiyirrE3F7Rwzj/view?usp=sharing',
          'station_day':'https://drive.google.com/file/d/1M6oxdKEjNflQh4euBTsFCslmXOjBi1wq/view?usp=sharing',
@@ -54,8 +52,6 @@ df["NH3_24hr_avg"] = df.groupby("StationId")["NH3"].rolling(window = 24, min_per
 df["CO_8hr_max"] = df.groupby("StationId")["CO"].rolling(window = 8, min_periods = 1).max().values
 df["O3_8hr_max"] = df.groupby("StationId")["O3"].rolling(window = 8, min_periods = 1).max().values
 
-# start <--------------------------- Sub Index Calculation ------------------------------->
-
 ## PM2.5 Sub-Index calculation
 def get_PM25_subindex(x):
     if x <= 30:
@@ -72,8 +68,6 @@ def get_PM25_subindex(x):
         return 400 + (x - 250) * 100 / 130
     else:
         return 0
-df["PM2.5_SubIndex"] = df["PM2.5_24hr_avg"].apply(lambda x: get_PM25_subindex(x))
-
 ## PM10 Sub-Index calculation
 def get_PM10_subindex(x):
     if x <= 50:
@@ -90,9 +84,6 @@ def get_PM10_subindex(x):
         return 400 + (x - 430) * 100 / 80
     else:
         return 0
-
-df["PM10_SubIndex"] = df["PM10_24hr_avg"].apply(lambda x: get_PM10_subindex(x))
-
 ## SO2 Sub-Index calculation
 def get_SO2_subindex(x):
     if x <= 40:
@@ -110,8 +101,6 @@ def get_SO2_subindex(x):
     else:
         return 0
 
-df["SO2_SubIndex"] = df["SO2_24hr_avg"].apply(lambda x: get_SO2_subindex(x))
-
 def get_NOx_subindex(x):
     if x <= 40:
         return x * 50 / 40
@@ -128,7 +117,6 @@ def get_NOx_subindex(x):
     else:
         return 0
 
-df["NOx_SubIndex"] = df["NOx_24hr_avg"].apply(lambda x: get_NOx_subindex(x))
 
 ## NH3 Sub-Index calculation
 def get_NH3_subindex(x):
@@ -147,7 +135,6 @@ def get_NH3_subindex(x):
     else:
         return 0
 
-df["NH3_SubIndex"] = df["NH3_24hr_avg"].apply(lambda x: get_NH3_subindex(x))
 
 ## CO Sub-Index calculation
 def get_CO_subindex(x):
@@ -166,8 +153,6 @@ def get_CO_subindex(x):
     else:
         return 0
 
-df["CO_SubIndex"] = df["CO_8hr_max"].apply(lambda x: get_CO_subindex(x))
-
 ## O3 Sub-Index calculation
 def get_O3_subindex(x):
     if x <= 50:
@@ -185,7 +170,6 @@ def get_O3_subindex(x):
     else:
         return 0
 
-df["O3_SubIndex"] = df["O3_8hr_max"].apply(lambda x: get_O3_subindex(x))
 
 ## AQI bucketing
 def get_AQI_bucket(x):
@@ -204,6 +188,14 @@ def get_AQI_bucket(x):
     else:
         return np.NaN
 
+df["SO2_SubIndex"] = df["SO2_24hr_avg"].apply(lambda x: get_SO2_subindex(x))
+df["NOx_SubIndex"] = df["NOx_24hr_avg"].apply(lambda x: get_NOx_subindex(x))
+df["O3_SubIndex"] = df["O3_8hr_max"].apply(lambda x: get_O3_subindex(x))
+df["CO_SubIndex"] = df["CO_8hr_max"].apply(lambda x: get_CO_subindex(x))
+df["PM10_SubIndex"] = df["PM10_24hr_avg"].apply(lambda x: get_PM10_subindex(x))
+df["PM2.5_SubIndex"] = df["PM2.5_24hr_avg"].apply(lambda x: get_PM25_subindex(x))
+df["NH3_SubIndex"] = df["NH3_24hr_avg"].apply(lambda x: get_NH3_subindex(x))
+
 df["Checks"] = (df["PM2.5_SubIndex"] > 0).astype(int) + \
                 (df["PM10_SubIndex"] > 0).astype(int) + \
                 (df["SO2_SubIndex"] > 0).astype(int) + \
@@ -218,16 +210,15 @@ df.loc[df["PM2.5_SubIndex"] + df["PM10_SubIndex"] <= 0, "AQI_calculated"] = np.N
 df.loc[df.Checks < 3, "AQI_calculated"] = np.NaN
 
 df["AQI_bucket_calculated"] = df["AQI_calculated"].apply(lambda x: get_AQI_bucket(x))
-# df[~df.AQI_calculated.isna()].head(13)
+df[~df.AQI_calculated.isna()].head(13)
 
-
-#  end <--------------------------- Sub Index Calculation ------------------------------->
 
 df_station_hour = df
 df_station_day = pd.read_csv(PATH_STATION_DAY)
 
 df_station_day = df_station_day.merge(df.groupby(["StationId", "Date"])["AQI_calculated"].mean().reset_index(), on = ["StationId", "Date"])
 df_station_day.AQI_calculated = round(df_station_day.AQI_calculated)
+
 
 df_city_hour = pd.read_csv(PATH_CITY_HOUR)
 df_city_day = pd.read_csv(PATH_CITY_DAY)
@@ -246,31 +237,28 @@ df_check_station_day = df_station_day[["AQI", "AQI_calculated"]].dropna()
 df_check_city_hour = df_city_hour[["AQI", "AQI_calculated"]].dropna()
 df_check_city_day = df_city_day[["AQI", "AQI_calculated"]].dropna()
 
-
 df1=pd.read_csv(PATH_STATIONS)
 df=pd.merge(df1,df,on='StationId')
 
-X=df[['PM2.5_SubIndex','PM10_SubIndex','SO2_SubIndex', 'NOx_SubIndex', 'NH3_SubIndex', 'CO_SubIndex','O3_SubIndex']]
+df = df.dropna()
+X=df[['PM2.5_SubIndex','PM10_SubIndex','SO2_SubIndex', 'NOx_SubIndex', 'NH3_SubIndex', 'CO_SubIndex','O3_SubIndex',]]
 Y=df[['AQI_calculated']]
+X.tail(10)
 
 X_train,X_test,Y_train,Y_test=train_test_split(X,Y,test_size=0.2,random_state=70)
-# print(X_train.shape,X_test.shape,Y_train.shape,Y_test.shape)
+print(X_train.shape,X_test.shape,Y_train.shape,Y_test.shape)
 
-
-# start  <----------------------- Decision Tree Rgressor -----------------------> 
-DT=DecisionTreeRegressor()
-DT.fit(X_train,Y_train)
-train_preds=DT.predict(X_train)
-test_preds=DT.predict(X_test)
-RMSE_train=(np.sqrt(metrics.mean_squared_error(Y_train, train_preds)))
-RMSE_test=(np.sqrt(metrics.mean_squared_error(Y_test,test_preds)))
+RF=RandomForestRegressor().fit(X_train,Y_train)
+train_preds1=RF.predict(X_train)
+test_preds1=RF.predict(X_test)
+RMSE_train=(np.sqrt(metrics.mean_squared_error(Y_train, train_preds1)))
+RMSE_test=(np.sqrt(metrics.mean_squared_error(Y_test,test_preds1)))
 print("RMSE TrainingData ", str(RMSE_train))
 print("RMSE TestData", str(RMSE_test))
 print('-'*50)
-print('RSquared value on train:',DT.score (X_train, Y_train))
-print('RSquared value on test:',DT.score (X_test, Y_test))
+print('RSquared value on train:',RF.score (X_train, Y_train))
+print('RSquared value on test:',RF.score (X_test, Y_test))
 
-# end  <----------------------- Decision Tree Rgressor ----------------------->
 
 app = Flask(__name__)
 @app.route('/')    
