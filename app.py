@@ -12,7 +12,6 @@ from sklearn.ensemble import RandomForestRegressor
 from sklearn import metrics
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.metrics import accuracy_score, confusion_matrix 
-import ibm_db
 import json
 import requests
 from flask import Flask, render_template, request, redirect, url_for, session
