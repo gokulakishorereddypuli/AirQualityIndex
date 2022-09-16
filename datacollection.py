@@ -6,7 +6,9 @@ df=pd.read_csv('https://data.gov.in/sites/default/files/all_india_PO_list_withou
 save_path = 'files/datasets/'
 df.to_csv(os.path.join(save_path,"all_india_city_pincodes.csv"))
 
-print("success") """
+print("success")
+
+
 import os
 import pgeocode
 import pandas as pd
@@ -20,4 +22,11 @@ print(len(li))
 x=nomi.query_postal_code(li)
 
 save_path = 'files/datasets/'
-x.to_csv(os.path.join(save_path,"allindia_cities.csv"))
+x.to_csv(os.path.join(save_path,"allindia_cities.csv"))  """
+
+import pandas as pd
+import os
+pin=pd.read_csv('https://raw.githubusercontent.com/PULI-GOKULA-KISHORE-REDDY/IBM-HACK-CHALLENGE/main/files/datasets/allindia_cities.csv')
+pin.drop(columns=['country_code','community_name','county_code','community_code','accuracy','state_code'],inplace=True)
+save_path = 'files/datasets/'
+pin.to_csv(os.path.join(save_path,"allindia_cities.csv")) 
