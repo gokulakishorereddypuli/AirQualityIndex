@@ -242,7 +242,7 @@ df=pd.merge(df1,df,on='StationId')
 
 df = df.dropna()  """
 
-df=pd.read_csv('aqi_data.csv')
+df=pd.read_csv('files/datasets/aqi_data.csv')
 X=df[['PM2.5_SubIndex','PM10_SubIndex','SO2_SubIndex', 'NOx_SubIndex', 'NH3_SubIndex', 'CO_SubIndex','O3_SubIndex',]]
 Y=df[['AQI_calculated']]
 X.tail(10)
