@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1">
 		
-		<title>Compass Starter by Ariona, Rian</title>
+		<title>air quality index{{d["CO"]["concentration"]}}</title>
 
 		<!-- Loading third party fonts -->
 		<link href="http://fonts.googleapis.com/css?family=Roboto:300,400,700|" rel="stylesheet" type="text/css">
@@ -70,9 +70,9 @@
 								<div class="date">6 Oct</div>
 							</div> <!-- .forecast-header -->
 							<div class="forecast-content">
-								<div class="location">New York</div>
+								<div class="location">New Delhi</div>
 								<div class="degree">
-									<div class="num">23<sup>o</sup>C</div>
+									<div class="num">{{d["CO"]["concentration"]}}<sup>o</sup>C</div>
 									<div class="forecast-icon">
 										<img src="/static/images/icons/icon-1.svg" alt="" width=90>
 									</div>	

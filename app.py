@@ -261,6 +261,23 @@ print('-'*50)
 print('RSquared value on train:',RF.score (X_train, Y_train))
 print('RSquared value on test:',RF.score (X_test, Y_test))
 
+import requests
+import json
+url = "https://air-quality-by-api-ninjas.p.rapidapi.com/v1/airquality"
+
+querystring = {"city":"new delhi"}
+
+headers = {
+	"X-RapidAPI-Key": "4f7bb14128msh9b291ceae57c2d4p12b8b5jsn9580099f1b46",
+	"X-RapidAPI-Host": "air-quality-by-api-ninjas.p.rapidapi.com"
+}
+
+response = requests.request("GET", url, headers=headers, params=querystring)
+
+print(response.text)
+data=response.text
+data=json.loads(data)
+print(data["CO"]['concentration'])
 
 
 
@@ -270,7 +287,7 @@ app = Flask(__name__)
 @app.route('/')    
 @app.route('/home')
 def login():
-    return render_template('index.html')
+    return render_template('index.html',d=data)
 @app.route('/news')    
 def news():
     return render_template('news.html')
