@@ -16,6 +16,7 @@ import json
 import requests
 from flask import Flask, render_template, request, redirect, url_for, session
 
+"""
 dataset={'city_day':'https://drive.google.com/file/d/158j8UBocM-wzIF29fsiBVAmfwQA2JVIV/view?usp=sharing',
          'city_hour' :'https://drive.google.com/file/d/1vNRx81y6CehUR81t9oNiyirrE3F7Rwzj/view?usp=sharing',
          'station_day':'https://drive.google.com/file/d/1M6oxdKEjNflQh4euBTsFCslmXOjBi1wq/view?usp=sharing',
@@ -237,9 +238,11 @@ df_check_city_hour = df_city_hour[["AQI", "AQI_calculated"]].dropna()
 df_check_city_day = df_city_day[["AQI", "AQI_calculated"]].dropna()
 
 df1=pd.read_csv(PATH_STATIONS)
-df=pd.merge(df1,df,on='StationId')
+df=pd.merge(df1,df,on='StationId')  
 
-df = df.dropna()
+df = df.dropna()  """
+
+df=pd.read_csv('aqi_data.csv')
 X=df[['PM2.5_SubIndex','PM10_SubIndex','SO2_SubIndex', 'NOx_SubIndex', 'NH3_SubIndex', 'CO_SubIndex','O3_SubIndex',]]
 Y=df[['AQI_calculated']]
 X.tail(10)
@@ -258,6 +261,10 @@ print('-'*50)
 print('RSquared value on train:',RF.score (X_train, Y_train))
 print('RSquared value on test:',RF.score (X_test, Y_test))
 
+
+
+
+#  df.to_csv("aqi_data.csv")
 
 app = Flask(__name__)
 @app.route('/')    
