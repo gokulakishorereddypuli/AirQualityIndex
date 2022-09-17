@@ -322,7 +322,11 @@ def find_aqi():
             response = requests.request("GET", url, headers=headers, params=querystring)
             data=response.text
             data=json.loads(data)
-            return data
+            try:
+                if(data['error']):
+                    print("Error")
+            except:
+                return data
     except:
         return render_template('404.html')
 @app.route('/404')
