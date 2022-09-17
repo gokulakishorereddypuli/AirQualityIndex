@@ -30,13 +30,13 @@ def get_data(pin,lat,lon):
     data=json.loads(data)
     try:
       pf.loc[pf["postal_code"] == pin, "Date"] =  date.today()
-      pf.loc[pf["postal_code"] == pin, "PM10"] = data["PM10"]['concentration']
       pf.loc[pf["postal_code"] == pin, "PM2.5"] = data["PM2.5"]['concentration'] 
       pf.loc[pf["postal_code"] == pin, "CO"] =  data["CO"]['concentration']
       pf.loc[pf["postal_code"] == pin, "SO2"] =  data["SO2"]['concentration']
       pf.loc[pf["postal_code"] == pin, "O3"] = data["O3"]['concentration']
       pf.loc[pf["postal_code"] == pin, "N02"] = data["NO2"]['concentration'] 
       pf.loc[pf["postal_code"] == pin, "AQI"] = data['overall_aqi']
+      pf.loc[pf["postal_code"] == pin, "PM10"] = data["PM10"]['concentration']
     except  Exception as e:
         print(data)
         print("Error-",e)
