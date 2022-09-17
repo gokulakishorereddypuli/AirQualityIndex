@@ -13,7 +13,7 @@ pf['PM10']=0.0
 pf['CO']=0.0
 pf['Date']=''
 print(pf.head(2))
-c=10001
+c=13001
 def get_data(pin,lat,lon):
     global pf, c
     pin=int(pin)
@@ -40,7 +40,7 @@ def get_data(pin,lat,lon):
     except:
       print("Error")
     c=c+1
-    if(c>=50000):
+    if(c>=17000):
       save_path = 'files/datasets/'
       pf.to_csv(os.path.join(save_path,str(c)+"_latest_aqi_reports_"+str( date.today())+".csv"))
     """
@@ -53,5 +53,5 @@ def get_data(pin,lat,lon):
     update = pd.DataFrame({'postal_code' : int(pin) ,'AQI':d['data'][0]['aqi'] ,'PM10':d['data'][0]['pm10'], 'PM2.5': d['data'][0]['pm25'] , 'CO': d['data'][0]['co'], 'SO2': d['data'][0]['so2'], 'O3': d['data'][0]['o3'],'NO2':d['data'][0]['no2'] }, index=[0])
     pf.loc[pf.postal_code == pin].update(update)"""
 
-pf=pf.iloc[10001:50001] 
+pf=pf.iloc[13001:17001] 
 pf=pf[['postal_code','latitude','longitude']].apply(lambda x : get_data(*x),axis=1)
