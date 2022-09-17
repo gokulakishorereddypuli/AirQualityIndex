@@ -301,5 +301,24 @@ def live_cameras():
 def photos():
     return render_template('photos.html')
 
+@app.route('/find-aqi-of-place',methods=['POST'])
+def find_aqi():
+    x = [x for x in request.form.values()]
+    print(x)
+    location=x[0]
+    latitude=x[1]
+    longitude=x[2]
+    url = "https://air-quality-by-api-ninjas.p.rapidapi.com/v1/airquality"
+
+    querystring = {"lat":latitude,"lon": longitude}
+    headers = {
+      "X-RapidAPI-Key": "4f7bb14128msh9b291ceae57c2d4p12b8b5jsn9580099f1b46",
+      "X-RapidAPI-Host": "air-quality-by-api-ninjas.p.rapidapi.com"
+    }
+    response = requests.request("GET", url, headers=headers, params=querystring)
+    data=response.text
+    data=json.loads(data)
+    return data
+
 if __name__ == "__main__":
-    app.run(debug=False)
+    app.run(debug=True)
