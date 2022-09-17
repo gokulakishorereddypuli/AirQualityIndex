@@ -37,8 +37,8 @@ def get_data(pin,lat,lon):
       pf.loc[pf["postal_code"] == pin, "O3"] = data["O3"]['concentration']
       pf.loc[pf["postal_code"] == pin, "N02"] = data["NO2"]['concentration'] 
       pf.loc[pf["postal_code"] == pin, "AQI"] = data['overall_aqi']
-    except:
-      print("Error")
+    except  Exception as e:
+      print("Error-",e)
     c=c+1
     if(c>=26000):
       save_path = 'files/datasets/'
