@@ -45,9 +45,8 @@ pf['PM2.5']=0.0
 pf['PM10']=0.0
 pf['CO']=0.0
 pf['Date']=''
-
 def get_data(pin,lat,lon):
-    global pf
+    global pf, c
     pin=int(pin)
     print(pin,lat,lon)
     url = "https://air-quality-by-api-ninjas.p.rapidapi.com/v1/airquality"
@@ -68,8 +67,8 @@ def get_data(pin,lat,lon):
     pf.loc[pf["postal_code"] == pin, "O3"] = data["O3"]['concentration']
     pf.loc[pf["postal_code"] == pin, "N02"] = data["NO2"]['concentration'] 
     pf.loc[pf["postal_code"] == pin, "AQI"] = data['overall_aqi']
-    print(pf.head())
-
+    save_path = 'files/datasets/'
+    pf.to_csv(os.path.join(save_path,"latest_aqi_reports.csv"))
     """
     # https://api.weatherbit.io/v2.0/history/daily?postal_code=27601&country=US&start_date=2022-09-12&end_date=2022-09-13&key=API_KEY
     url='https://api.weatherbit.io/v2.0/current/airquality?&lat='+str(lat)+'&lon='+str(lon)+'&key=f0defabbf503444c8e4892c942e3f0d1'
