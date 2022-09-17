@@ -307,28 +307,22 @@ def aqi():
 def find_aqi():
     x = [x for x in request.form.values()]
     print(x)
-    try: 
-        if(len(x[1])>0 and len(x[2])>0):
-            location=x[0]
-            latitude=x[1]
-            longitude=x[2]
-            url = "https://air-quality-by-api-ninjas.p.rapidapi.com/v1/airquality"
+    if(len(x[1])>0 and len(x[2])>0):
+        location=x[0]
+        latitude=x[1]
+        longitude=x[2]
+        url = "https://air-quality-by-api-ninjas.p.rapidapi.com/v1/airquality"
 
-            querystring = {"lat":latitude,"lon": longitude}
-            headers = {
+        querystring = {"lat":latitude,"lon": longitude}
+        headers = {
             "X-RapidAPI-Key": "4f7bb14128msh9b291ceae57c2d4p12b8b5jsn9580099f1b46",
             "X-RapidAPI-Host": "air-quality-by-api-ninjas.p.rapidapi.com"
-            }
-            response = requests.request("GET", url, headers=headers, params=querystring)
-            data=response.text
-            data=json.loads(data)
-            try:
-                if(data['error']):
-                    print("Error")
-            except:
-                return data
-    except:
-        return render_template('404.html')
+        }
+        response = requests.request("GET", url, headers=headers, params=querystring)
+        data=response.text
+        data=json.loads(data)
+        return data
+    return render_template('404.html')
 @app.route('/404')
 def notfound_404():
     return render_template('404.html')
