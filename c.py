@@ -3,6 +3,7 @@ import pandas as pd
 import requests
 import json
 from datetime import date
+"""
 pf=pd.read_csv('https://raw.githubusercontent.com/PULI-GOKULA-KISHORE-REDDY/IBM-HACK-CHALLENGE/main/files/datasets/allindia_cities.csv')
 pf=pf.dropna()
 pf['SO2']=0.0
@@ -13,7 +14,7 @@ pf['PM10']=0.0
 pf['CO']=0.0
 pf['Date']=''
 print(pf.head(2))
-c=32001
+c=29001
 def get_data(pin,lat,lon):
     global pf, c
     pin=int(pin)
@@ -41,10 +42,10 @@ def get_data(pin,lat,lon):
       print(data)
       print("Error-",e)
     c=c+1
-    if(c>=35000):
+    if(c>=30000):
       save_path = 'files/datasets/'
       pf.to_csv(os.path.join(save_path,str(c)+"_latest_aqi_reports_"+str( date.today())+".csv"))
-    """
+    
     # https://api.weatherbit.io/v2.0/history/daily?postal_code=27601&country=US&start_date=2022-09-12&end_date=2022-09-13&key=API_KEY
     url='https://api.weatherbit.io/v2.0/current/airquality?&lat='+str(lat)+'&lon='+str(lon)+'&key=f0defabbf503444c8e4892c942e3f0d1'
     response = requests.request("GET", url, headers=headers, params=querystring)
@@ -52,20 +53,26 @@ def get_data(pin,lat,lon):
     d=json.loads(response.text) 
 
     update = pd.DataFrame({'postal_code' : int(pin) ,'AQI':d['data'][0]['aqi'] ,'PM10':d['data'][0]['pm10'], 'PM2.5': d['data'][0]['pm25'] , 'CO': d['data'][0]['co'], 'SO2': d['data'][0]['so2'], 'O3': d['data'][0]['o3'],'NO2':d['data'][0]['no2'] }, index=[0])
-    pf.loc[pf.postal_code == pin].update(update)"""
+    pf.loc[pf.postal_code == pin].update(update)
 
-pf=pf.iloc[32001:35001] 
+pf=pf.iloc[29001:30001] 
 pf=pf[['postal_code','latitude','longitude']].apply(lambda x : get_data(*x),axis=1)
 
 """
-df1=pd.read_csv('files/datasets/1400_latest_aqi_reports_2022-09-17.csv')
-df2=pd.read_csv('files/datasets/2800_latest_aqi_reports_2022-09-17.csv')
-df3=pd.read_csv('files/datasets/5000_latest_aqi_reports_2022-09-17.csv')
-df4=pd.read_csv('files/datasets/7000_latest_aqi_reports_2022-09-17.csv')
-df5=pd.read_csv('files/datasets/9000_latest_aqi_reports_2022-09-17.csv')
+df1=pd.read_csv('files/datasets/13000_latest_aqi_reports_2022-09-18.csv')
+df2=pd.read_csv('files/datasets/17000_latest_aqi_reports_2022-09-18.csv')
+df3=pd.read_csv('files/datasets/18000_latest_aqi_reports_2022-09-18.csv')
+df4=pd.read_csv('files/datasets/19000_latest_aqi_reports_2022-09-18.csv')
+df5=pd.read_csv('files/datasets/20000_latest_aqi_reports_2022-09-18.csv')
+df6=pd.read_csv('files/datasets/21500_latest_aqi_reports_2022-09-18.csv')
+df7=pd.read_csv('files/datasets/23000_latest_aqi_reports_2022-09-18.csv')
+df8=pd.read_csv('files/datasets/26000_latest_aqi_reports_2022-09-18.csv')
+df9=pd.read_csv('files/datasets/27500_latest_aqi_reports_2022-09-18.csv')
+df10=pd.read_csv('files/datasets/29000_latest_aqi_reports_2022-09-18.csv')
+df11=pd.read_csv('files/datasets/30000_latest_aqi_reports_2022-09-18.csv')
 
-df=pd.concat([df1,df2,df3,df4,df5])
+
+
+df=pd.concat([df1,df2,df3,df4,df5,df6,df7,df8,df9,df10,df11])
 save_path = 'files/datasets/'
-df.to_csv(os.path.join(save_path,str("9000")+"_latest_aqi_reports_"+str( date.today())+".csv"))
-
-"""
+df.to_csv(os.path.join(save_path,str("30000")+"_latest_aqi_reports_"+str( date.today())+".csv"))
