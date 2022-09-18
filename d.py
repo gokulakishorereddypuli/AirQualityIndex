@@ -37,6 +37,7 @@ def get_data(pin,lat,lon):
       pf.loc[pf["postal_code"] == pin, "N02"] = data["NO2"]['concentration'] 
       pf.loc[pf["postal_code"] == pin, "AQI"] = data['overall_aqi']
       pf.loc[pf["postal_code"] == pin, "PM10"] = data["PM10"]['concentration']
+      print(data)
     except  Exception as e:
       print(data)
       print("Error-",e)
