@@ -3,7 +3,7 @@ import pandas as pd
 import requests
 import json
 from datetime import date
-"""
+
 pf=pd.read_csv('https://raw.githubusercontent.com/PULI-GOKULA-KISHORE-REDDY/IBM-HACK-CHALLENGE/main/files/datasets/allindia_cities.csv')
 pf=pf.dropna()
 pf['SO2']=0.0
@@ -14,7 +14,7 @@ pf['PM10']=0.0
 pf['CO']=0.0
 pf['Date']=''
 print(pf.head(2))
-c=29001
+c=33001
 def get_data(pin,lat,lon):
     global pf, c
     pin=int(pin)
@@ -42,20 +42,12 @@ def get_data(pin,lat,lon):
       print(data)
       print("Error-",e)
     c=c+1
-    if(c>=30000):
+    if(c>=34000):
       save_path = 'files/datasets/'
       pf.to_csv(os.path.join(save_path,str(c)+"_latest_aqi_reports_"+str( date.today())+".csv"))
     
-    # https://api.weatherbit.io/v2.0/history/daily?postal_code=27601&country=US&start_date=2022-09-12&end_date=2022-09-13&key=API_KEY
-    url='https://api.weatherbit.io/v2.0/current/airquality?&lat='+str(lat)+'&lon='+str(lon)+'&key=f0defabbf503444c8e4892c942e3f0d1'
-    response = requests.request("GET", url, headers=headers, params=querystring)
-    print(response.text)
-    d=json.loads(response.text) 
 
-    update = pd.DataFrame({'postal_code' : int(pin) ,'AQI':d['data'][0]['aqi'] ,'PM10':d['data'][0]['pm10'], 'PM2.5': d['data'][0]['pm25'] , 'CO': d['data'][0]['co'], 'SO2': d['data'][0]['so2'], 'O3': d['data'][0]['o3'],'NO2':d['data'][0]['no2'] }, index=[0])
-    pf.loc[pf.postal_code == pin].update(update)
-
-pf=pf.iloc[29001:30001] 
+pf=pf.iloc[33001:34001] 
 pf=pf[['postal_code','latitude','longitude']].apply(lambda x : get_data(*x),axis=1)
 
 """
@@ -75,3 +67,4 @@ df=pd.concat([df1,df2,df3,df4,df5,df6,df7,df8,df9,df10,df11])
 print(df.shape)
 x=df.to_csv(str("30000")+"_latest_aqi_reports_"+str( date.today())+".csv")
 print(x)
+"""
