@@ -3,6 +3,8 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import warnings
+
+from files.modules.weather_apis import rapidapi, weatherbit
 warnings.filterwarnings('ignore')
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
@@ -19,6 +21,9 @@ import plotly
 import plotly.express as px
 import seaborn as sns
 import matplotlib.pyplot as plt
+
+# importing modules
+from files.modules import *
 """
 dataset={'city_day':'https://drive.google.com/file/d/158j8UBocM-wzIF29fsiBVAmfwQA2JVIV/view?usp=sharing',
          'city_hour' :'https://drive.google.com/file/d/1vNRx81y6CehUR81t9oNiyirrE3F7Rwzj/view?usp=sharing',
@@ -243,7 +248,7 @@ df_check_city_day = df_city_day[["AQI", "AQI_calculated"]].dropna()
 df1=pd.read_csv(PATH_STATIONS)
 df=pd.merge(df1,df,on='StationId')  
 
-df = df.dropna()  """
+df = df.dropna()  
 
 df=pd.read_csv('files/datasets/aqi_data.csv')
 X=df[['PM2.5_SubIndex','PM10_SubIndex','SO2_SubIndex', 'NOx_SubIndex', 'NH3_SubIndex', 'CO_SubIndex','O3_SubIndex',]]
@@ -282,7 +287,7 @@ data=response.text
 data=json.loads(data)
 print(data["CO"]['concentration'])
 
-
+"""
 
 #  df.to_csv("aqi_data.csv")
 
@@ -290,7 +295,7 @@ app = Flask(__name__)
 @app.route('/')    
 @app.route('/home')
 def login():
-    return render_template('index.html',d=data)
+    return render_template('index.html')
 @app.route('/news')    
 def news():
     return render_template('news.html')
@@ -314,17 +319,7 @@ def find_aqi():
         location=x[0]
         latitude=x[1]
         longitude=x[2]
-        url = "https://air-quality-by-api-ninjas.p.rapidapi.com/v1/airquality"
-
-        querystring = {"lat":latitude,"lon": longitude}
-        headers = {
-            "X-RapidAPI-Key": "4f7bb14128msh9b291ceae57c2d4p12b8b5jsn9580099f1b46",
-            "X-RapidAPI-Host": "air-quality-by-api-ninjas.p.rapidapi.com"
-        }
-        response = requests.request("GET", url, headers=headers, params=querystring)
-        data=response.text
-        data=json.loads(data)
-        return data
+        return rapidapi(location,latitude,longitude)
     return render_template('404.html')
 @app.route('/404')
 def notfound_404():
@@ -332,7 +327,7 @@ def notfound_404():
 @app.route('/graph-view')
 def graph():
 
-    df=pd.read_csv("data.csv")
+    df=weatherbit(1,2)
     fig = px.bar(df, x="Date-Time", y='AQI',color="AQI",  barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="AQI of Delhi")
     fig1 = px.bar(df, x="Date-Time", y='SO2', color="SO2", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="SO2 Concentrations of Delhi")
     graphJSON = json.dumps(fig,cls=plotly.utils.PlotlyJSONEncoder)
