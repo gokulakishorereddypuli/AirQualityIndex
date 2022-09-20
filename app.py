@@ -15,7 +15,10 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 import json
 import requests
 from flask import Flask, render_template, request, redirect, url_for, session
-
+import plotly
+import plotly.express as px
+import seaborn as sns
+import matplotlib.pyplot as plt
 """
 dataset={'city_day':'https://drive.google.com/file/d/158j8UBocM-wzIF29fsiBVAmfwQA2JVIV/view?usp=sharing',
          'city_hour' :'https://drive.google.com/file/d/1vNRx81y6CehUR81t9oNiyirrE3F7Rwzj/view?usp=sharing',
@@ -326,6 +329,52 @@ def find_aqi():
 @app.route('/404')
 def notfound_404():
     return render_template('404.html')
+@app.route('/graph-view')
+def graph():
+
+    url = "https://air-quality.p.rapidapi.com/history/airquality"
+    querystring = {"lon":"78.4539","lat":"15.4248", "hours":"72"}
+    headers = {
+        "X-RapidAPI-Key": "4f7bb14128msh9b291ceae57c2d4p12b8b5jsn9580099f1b46",
+        "X-RapidAPI-Host": "air-quality.p.rapidapi.com"
+    }
+    response = requests.request("GET", url, headers=headers, params=querystring)
+    print(response.text)
+    data=response.text
+    data=json.loads(data)
+    data=pd.read_csv('data.csv')
+    print(data)
+    df = pd.DataFrame(data)
+    plt.figure(figsize=(19,7))
+    plt.xticks(rotation=90)
+    fig=sns.barplot(x='timestamp_local',y='so2',data=df)
+    graphJSON = json.dumps(fig)
+    
+    header="Fruit in North America"
+    description = """
+    A academic study of the number of apples, oranges and bananas in the cities of
+    San Francisco and Montreal would probably not come up with this chart.
+    """
+    return render_template('graph.html', graphJSON=graphJSON, header=header,description=description)
+"""
+    df = pd.DataFrame({
+        "Vegetables": ["Lettuce", "Cauliflower", "Carrots", "Lettuce", "Cauliflower", "Carrots"],
+        "Amount": [10, 15, 8, 5, 14, 25],
+        "City": ["London", "London", "London", "Madrid", "Madrid", "Madrid"]
+    })
+
+    fig = px.bar(df, x="Vegetables", y="Amount", color="City", barmode="stack")
+
+    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    header="Vegetables in Europe"
+    description = 
+    The rumor that vegetarians are having a hard time in London and Madrid can probably not be
+    explained by this chart.
+    
+    return render_template('graph.html', graphJSON=graphJSON, header=header,description=description)
+"""
+
+    
 
 if __name__ == "__main__":
     app.run(debug=True)
