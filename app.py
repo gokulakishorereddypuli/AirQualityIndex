@@ -332,47 +332,17 @@ def notfound_404():
 @app.route('/graph-view')
 def graph():
 
-    url = "https://air-quality.p.rapidapi.com/history/airquality"
-    querystring = {"lon":"78.4539","lat":"15.4248", "hours":"72"}
-    headers = {
-        "X-RapidAPI-Key": "4f7bb14128msh9b291ceae57c2d4p12b8b5jsn9580099f1b46",
-        "X-RapidAPI-Host": "air-quality.p.rapidapi.com"
-    }
-    response = requests.request("GET", url, headers=headers, params=querystring)
-    print(response.text)
-    data=response.text
-    data=json.loads(data)
-    data=pd.read_csv('data.csv')
-    print(data)
-    df = pd.DataFrame(data)
-    plt.figure(figsize=(19,7))
-    plt.xticks(rotation=90)
-    fig=sns.barplot(x='timestamp_local',y='so2',data=df)
-    graphJSON = json.dumps(fig)
-    
-    header="Fruit in North America"
-    description = """
-    A academic study of the number of apples, oranges and bananas in the cities of
-    San Francisco and Montreal would probably not come up with this chart.
-    """
-    return render_template('graph.html', graphJSON=graphJSON, header=header,description=description)
-"""
-    df = pd.DataFrame({
-        "Vegetables": ["Lettuce", "Cauliflower", "Carrots", "Lettuce", "Cauliflower", "Carrots"],
-        "Amount": [10, 15, 8, 5, 14, 25],
-        "City": ["London", "London", "London", "Madrid", "Madrid", "Madrid"]
-    })
-
-    fig = px.bar(df, x="Vegetables", y="Amount", color="City", barmode="stack")
-
-    graphJSON = json.dumps(fig, cls=plotly.utils.PlotlyJSONEncoder)
+    df=pd.read_csv("data.csv")
+    fig = px.bar(df, x="Date-Time", y='AQI',color="AQI",  barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="AQI of Delhi")
+    fig1 = px.bar(df, x="Date-Time", y='SO2', color="SO2", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="SO2 Concentrations of Delhi")
+    graphJSON = json.dumps(fig,cls=plotly.utils.PlotlyJSONEncoder)
+    graph1 = json.dumps(fig1,cls=plotly.utils.PlotlyJSONEncoder)
     header="Vegetables in Europe"
-    description = 
+    description = """
     The rumor that vegetarians are having a hard time in London and Madrid can probably not be
-    explained by this chart.
+    explained by this chart. """
     
-    return render_template('graph.html', graphJSON=graphJSON, header=header,description=description)
-"""
+    return render_template('graph.html', graphJSON=graphJSON,header=header,description=description,graph=graph1)
 
     
 

@@ -1,15 +1,20 @@
 <!doctype html>
 <html>
 <body style="font-family:arial, sans-serif">
-    <h1>{{header}}</h1>
+ 
     <h6><a href="/">Return to index page</a></h6>
     <div id="chart" class="chart"></div>
-    <div>{{description}}</div>
+   
+    <div id="chart1" class="chart"></div>
 </body>
 
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script type="text/javascript">
     var graphs = {{graphJSON | safe}};
-    Plotly.plot('chart',graphs,{});        
+    Plotly.plot('chart',graphs,{});   
+</script>
+<script type="text/javascript">
+    var graphs1= {{graph | safe}};
+    Plotly.plot('chart1',graphs1,{});   
 </script>
 </html>
