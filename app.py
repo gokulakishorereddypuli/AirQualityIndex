@@ -319,7 +319,9 @@ def find_aqi():
         location=x[0]
         latitude=x[1]
         longitude=x[2]
-        return render_template('aqi.html',data=rapidapi(location,latitude,longitude))
+        #data={'CO': {'concentration': 961.3, 'aqi': 10}, 'NO2': {'concentration': 50.04, 'aqi': 62}, 'O3': {'concentration': 30.76, 'aqi': 26}, 'SO2': {'concentration': 79.16, 'aqi': 70}, 'PM2.5': {'concentration': 45.22, 'aqi': 109}, 'PM10': {'concentration': 57.56, 'aqi': 51}, 'overall_aqi': 109}
+
+        return render_template('aqi.html',data={'CO': {'concentration': 961.3, 'aqi': 10}, 'NO2': {'concentration': 50.04, 'aqi': 62}, 'O3': {'concentration': 30.76, 'aqi': 26}, 'SO2': {'concentration': 79.16, 'aqi': 70}, 'PM2.5': {'concentration': 45.22, 'aqi': 109}, 'PM10': {'concentration': 57.56, 'aqi': 51}, 'overall_aqi': 109})
     return render_template('404.html')
 @app.route('/404')
 def notfound_404():
