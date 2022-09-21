@@ -310,7 +310,7 @@ def photos():
     return render_template('photos.html')
 @app.route('/aqi')
 def aqi():
-    return render_template('aqi.html')
+    return render_template('aqi.html',d='23')
 @app.route('/find-aqi-of-place',methods=['POST'])
 def find_aqi():
     x = [x for x in request.form.values()]

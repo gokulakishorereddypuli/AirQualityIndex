@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		
 		<meta charset="UTF-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1">
 		
-		<title>Compass Starter by Ariona, Rian</title>
+		<title>AQI and Weather Forecasting</title>
 
 		<!-- Loading third party fonts -->
 		<link href="http://fonts.googleapis.com/css?family=Roboto:300,400,700|" rel="stylesheet" type="text/css">
@@ -31,8 +30,8 @@
 					<a href="/" class="branding">
 						<img src="/static/images/logo.png" alt="" class="logo">
 						<div class="logo-type">
-							<h1 class="site-title">Company name</h1>
-							<small class="site-description">tagline goes here</small>
+							<h1 class="site-title"></h1>
+							<small class="site-description"></small>
 						</div>
 					</a>
 
@@ -40,12 +39,12 @@
 					<div class="main-navigation">
 						<button type="button" class="menu-toggle"><i class="fa fa-bars"></i></button>
 						<ul class="menu">
-							<li class="menu-item current-menu-item"><a href="/">Home</a></li>
-							<li class="menu-item"><a href="/news">News</a></li>
-							<!-- <li class="menu-item"><a href="/live-cameras">Live cameras</a></li>
-							<li class="menu-item"><a href="/photos">Photos</a></li> -->
+							<li class="menu-item "><a href="/">Home</a></li>
+							<!-- <li class="menu-item"><a href="/news">News</a></li>
+							<li class="menu-item"><a href="/live-cameras">Live cameras</a></li> -->
+							<li class="menu-item"><a href="/photos">Photos</a></li>
 							<li class="menu-item"><a href="/contact">Contact</a></li>
-							<li class="menu-item"><a href="/aqi">Air Quality Index</a></li>
+							<li class="menu-item current-menu-item"><a href="/aqi">Air Quality Index</a></li>
 						</ul> <!-- .menu -->
 					</div> <!-- .main-navigation -->
 
@@ -54,52 +53,41 @@
 				</div>
 			</div> <!-- .site-header -->
 
-			<main class="main-content">
+			<div class="hero" data-bg-image="images/banner.png">
 				<div class="container">
-					<div class="breadcrumb">
-						<a href="/">Home</a>
-						<span>Contact</span>
-					</div>
+					<form action="/find-aqi-of-place" class="find-location" method="POST">
+						<input type="text" name="autocomplete" id="autocomplete" placeholder="Find your location..." required>
+						<input type="hidden" id="latitude" name="latitude" class="form-control">
+						<input type="hidden" name="longitude" id="longitude" class="form-control">
+						<input type="submit" value="Find">
+					</form>
 				</div>
-
-				<div class="fullwidth-block">
-					<div class="container">
-						<div class="col-md-5">
-							<div class="contact-details">
-								<div class="map" data-latitude="-6.897789" data-longitude="107.621735"></div>
-								<div class="contact-info">
-									<address>
-										<img src="/static/images/icon-marker.png" alt="">
-										<p>Company Name INC. <br>
-										2803 Avenue Street, Los Angeles</p>
-									</address>
-									
-									<a href="#"><img src="/static/images/icon-phone.png" alt="">+1 800 314 235</a>
-									<a href="#"><img src="/static/images/icon-envelope.png" alt="">contact@companyname.com</a>
+			</div>
+			<div class="forecast-table">
+				<div class="container">
+					<div class="forecast-container">
+						<div class="today forecast">
+							<div class="forecast-header">
+								<div class="day"></div>
+								<div class="date">6 Oct</div>
+							</div> <!-- .forecast-header -->
+							<div class="forecast-content">
+								<div class="location">New Delhi</div>
+								<div class="degree">
+									<div class="num">{{d}}<sup>o</sup>C</div>
+									<div class="forecast-icon">
+										<img src="/static/images/icons/icon-1.svg" alt="" width=90>
+									</div>	
 								</div>
+								<span><img src="/static/images/icon-umberella.png" alt="">20%</span>
+								<span><img src="/static/images/icon-wind.png" alt="">18km/h</span>
+								<span><img src="/static/images/icon-compass.png" alt="">East</span>
 							</div>
 						</div>
-						<div class="col-md-6 col-md-offset-1">
-							<h2 class="section-title">Contact us</h2>
-							<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi consectetur inventore ducimus, facilis, numquam id soluta omnis eius recusandae nesciunt vero repellat harum cum. Nisi facilis odit hic, ipsum sed!</p>
-							<form action="#" class="contact-form">
-								<div class="row">
-									<div class="col-md-6"><input type="text" placeholder="Your name..."></div>
-									<div class="col-md-6"><input type="text" placeholder="Email Addresss..."></div>
-								</div>
-								<div class="row">
-									<div class="col-md-6"><input type="text" placeholder="Company name..."></div>
-									<div class="col-md-6"><input type="text" placeholder="Website..."></div>
-								</div>
-								<textarea name="" placeholder="Message..."></textarea>
-								<div class="text-right">
-									<input type="submit" placeholder="Send message">
-								</div>
-							</form>
-
-						</div>
+						
 					</div>
 				</div>
+
 				
 			</main> <!-- .main-content -->
 
@@ -128,10 +116,33 @@
 		</div>
 		
 		<script src="/static/js/jquery-1.11.1.min.js"></script>
-		<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&amp;language=en"></script>
 		<script src="/static/js/plugins.js"></script>
 		<script src="/static/js/app.js"></script>
-		
+		<script type="text/javascript"
+       		 src="https://maps.google.com/maps/api/js?key=AIzaSyB5E2OoXZ5oFE7T8w8h71GOby7cCv06Qek&libraries=places" ></script>
+		<script>
+			$(document).ready(function () {
+				$("#latitudeArea").addClass("d-none");
+				$("#longtitudeArea").addClass("d-none");
+			});
+		</script>
+		<script>
+			google.maps.event.addDomListener(window, 'load', initialize);
+
+			function initialize() {
+				var input = document.getElementById('autocomplete');
+				var autocomplete = new google.maps.places.Autocomplete(input);
+
+				autocomplete.addListener('place_changed', function () {
+					var place = autocomplete.getPlace();
+					$('#latitude').val(place.geometry['location'].lat());
+					$('#longitude').val(place.geometry['location'].lng());
+
+					$("#latitudeArea").removeClass("d-none");
+					$("#longtitudeArea").removeClass("d-none");
+				});
+			}
+		</script>
 	</body>
 
 </html>
