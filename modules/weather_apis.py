@@ -3,6 +3,7 @@ import requests
 from requests import request
 import json
 import os
+import csv
 from datetime import datetime
 def weatherbit(latitude,longitude):
     df=pd.read_csv('files/datasets/data.csv')
@@ -20,7 +21,7 @@ def rapidapi(location,latitude,longitude):
     response = requests.request("GET", url, headers=headers, params=querystring)
     data=response.text
     data=json.loads(data)
-
+    print(os.getcwd())
     json_data={"Date-Time":datetime.today(),"Location":location,"latitude":latitude,"longitude":longitude,
     	"CO": data['CO']['concentration'],"CO_aqi":   data['CO']['aqi'], 	
         "NO2": data['NO2']['concentration'], "NO2_aqi": data['NO2']['aqi'],	
@@ -31,6 +32,14 @@ def rapidapi(location,latitude,longitude):
         "overall_aqi": data['overall_aqi']
     }
     df= pd.DataFrame(json_data,index=[0])
+    #df.to_csv('files/datasets/rapid.csv')
+    #return data
+    df1=pd.read_csv('files/datasets/rapid.csv')
     print(os.getcwd())
-    df.to_csv("files/datasets/rapid.csv")
+    df=pd.concat([df1,df])
+    df=df[['Date-Time',	'Location'	,'latitude','longitude','CO','CO_aqi','NO2','NO2_aqi','O3','O3_aqi','SO2','SO2_aqi','PM2.5','PM2.5_aqi','PM10','PM10_aqi','overall_aqi']]
+    #df=df.drop(['Unnamed: 0.1'],axis=0)
+    os.remove("files/datasets/rapid.csv")
+    df.to_csv('files/datasets/rapid.csv')
+    
     return data
