@@ -319,7 +319,7 @@ def find_aqi():
         location=x[0]
         latitude=x[1]
         longitude=x[2]
-        return rapidapi(location,latitude,longitude)
+        return render_template('aqi.html',data=rapidapi(location,latitude,longitude))
     return render_template('404.html')
 @app.route('/404')
 def notfound_404():
