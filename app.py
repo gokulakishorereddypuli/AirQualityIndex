@@ -3,8 +3,7 @@ import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
 import warnings
-
-from files.modules.weather_apis import rapidapi, weatherbit
+from modules.weather_apis import *
 warnings.filterwarnings('ignore')
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
@@ -23,7 +22,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # importing modules
-from files.modules import *
+
+
 """
 dataset={'city_day':'https://drive.google.com/file/d/158j8UBocM-wzIF29fsiBVAmfwQA2JVIV/view?usp=sharing',
          'city_hour' :'https://drive.google.com/file/d/1vNRx81y6CehUR81t9oNiyirrE3F7Rwzj/view?usp=sharing',
@@ -332,12 +332,7 @@ def graph():
     fig1 = px.bar(df, x="Date-Time", y='SO2', color="SO2", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="SO2 Concentrations of Delhi")
     graphJSON = json.dumps(fig,cls=plotly.utils.PlotlyJSONEncoder)
     graph1 = json.dumps(fig1,cls=plotly.utils.PlotlyJSONEncoder)
-    header="Vegetables in Europe"
-    description = """
-    The rumor that vegetarians are having a hard time in London and Madrid can probably not be
-    explained by this chart. """
-    
-    return render_template('graph.html', graphJSON=graphJSON,header=header,description=description,graph=graph1)
+    return render_template('graph.html', graphJSON=graphJSON,graph=graph1)
 
     
 

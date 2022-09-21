@@ -2,6 +2,7 @@ import pandas as pd
 import requests
 from requests import request
 import json
+import os
 from datetime import datetime
 def weatherbit(latitude,longitude):
     df=pd.read_csv('files/datasets/data.csv')
@@ -30,5 +31,6 @@ def rapidapi(location,latitude,longitude):
         "overall_aqi": data['overall_aqi']
     }
     df= pd.DataFrame(json_data,index=[0])
+    print(os.getcwd())
     df.to_csv("files/datasets/rapid.csv")
     return data
