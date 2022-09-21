@@ -20,6 +20,7 @@ import plotly
 import plotly.express as px
 import seaborn as sns
 import matplotlib.pyplot as plt
+import datetime
 
 # importing modules
 
@@ -310,7 +311,11 @@ def photos():
     return render_template('photos.html')
 @app.route('/aqi')
 def aqi():
-    return render_template('aqi.html',d='23')
+    date = datetime.datetime.now()
+    month=date.strftime('%b')
+    da=date.strftime('%d')
+ 
+    return render_template('aqi.html',data={'CO': {'concentration': 961.3, 'aqi': 10}, 'NO2': {'concentration': 50.04, 'aqi': 62}, 'O3': {'concentration': 30.76, 'aqi': 26}, 'SO2': {'concentration': 79.16, 'aqi': 70}, 'PM2.5': {'concentration': 45.22, 'aqi': 109}, 'PM10': {'concentration': 57.56, 'aqi': 51}, 'overall_aqi': 109},month=month,date=da)
 @app.route('/find-aqi-of-place',methods=['POST'])
 def find_aqi():
     x = [x for x in request.form.values()]
@@ -320,8 +325,13 @@ def find_aqi():
         latitude=x[1]
         longitude=x[2]
         #data={'CO': {'concentration': 961.3, 'aqi': 10}, 'NO2': {'concentration': 50.04, 'aqi': 62}, 'O3': {'concentration': 30.76, 'aqi': 26}, 'SO2': {'concentration': 79.16, 'aqi': 70}, 'PM2.5': {'concentration': 45.22, 'aqi': 109}, 'PM10': {'concentration': 57.56, 'aqi': 51}, 'overall_aqi': 109}
-
-        return render_template('aqi.html',data={'CO': {'concentration': 961.3, 'aqi': 10}, 'NO2': {'concentration': 50.04, 'aqi': 62}, 'O3': {'concentration': 30.76, 'aqi': 26}, 'SO2': {'concentration': 79.16, 'aqi': 70}, 'PM2.5': {'concentration': 45.22, 'aqi': 109}, 'PM10': {'concentration': 57.56, 'aqi': 51}, 'overall_aqi': 109})
+        date = datetime.datetime.now()
+        month=date.strftime('%b')
+        da=date.strftime('%d')
+        #print('-------------------========================================================-======',date,month,da)
+        
+    
+        return render_template('aqi.html',data={'CO': {'concentration': 961.3, 'aqi': 10}, 'NO2': {'concentration': 50.04, 'aqi': 62}, 'O3': {'concentration': 30.76, 'aqi': 26}, 'SO2': {'concentration': 79.16, 'aqi': 70}, 'PM2.5': {'concentration': 45.22, 'aqi': 109}, 'PM10': {'concentration': 57.56, 'aqi': 51}, 'overall_aqi': 109},month=month,date=da)
     return render_template('404.html')
 @app.route('/404')
 def notfound_404():
