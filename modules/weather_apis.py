@@ -41,5 +41,7 @@ def rapidapi(location,latitude,longitude):
     #df=df.drop(['Unnamed: 0.1'],axis=0)
     os.remove("files/datasets/rapid.csv")
     df.to_csv('files/datasets/rapid.csv')
-    
     return data
+
+def histroy_rapidapi():
+    
