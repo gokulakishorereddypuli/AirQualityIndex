@@ -32,7 +32,7 @@ from sklearn.metrics import accuracy_score, confusion_matrix
 # importing modules
 from modules.weather_apis import *
 from modules.aqi_index_calculation import *
-
+from modules.weather_prediction import *
 """
 dataset={'city_day':'https://drive.google.com/file/d/158j8UBocM-wzIF29fsiBVAmfwQA2JVIV/view?usp=sharing',
          'city_hour' :'https://drive.google.com/file/d/1vNRx81y6CehUR81t9oNiyirrE3F7Rwzj/view?usp=sharing',

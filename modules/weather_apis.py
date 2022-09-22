@@ -44,4 +44,4 @@ def rapidapi(location,latitude,longitude):
     return data
 
 def histroy_rapidapi():
-    
+    return False
