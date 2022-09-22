@@ -105,5 +105,7 @@ pred=model.predict(start=start,end=end,type='levels')
 pred['Date']=pd.DataFrame(l)
 print(pred)
 
+"""
 pred.plot(legend=True)
 test['AQI'].plot(legend=True)
+"""

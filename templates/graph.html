@@ -2,16 +2,37 @@
 <html>
 <body style="font-family:arial, sans-serif">
  <style>
-    .div{
-        margin-left: 100px;
-        margin-right: 100px;
+    .margins{ 
+        margin-left: 1000px;
+        margin-right: 1000px;
     }
+    .grid-container {
+         display : flex;
+          background-color: none;
+          padding: 2px;
+        }
+        .grid-item {
+          background-color: rgba(255, 255, 255, 0.8);
+          padding: 2px;
+          font-size: 30px;
+          text-align: center;
+          width : 900%
+        }
 
  </style>
-    <h6><a href="/">Return to index page</a></h6>
-    <div id="chart" class="chart"></div>
-   
-    <div id="chart1" class="chart"></div>
+    <div class="grid-container">
+        <div class="grid-item">
+            <div id="chart" class="chart"></div>
+        </div>
+      </div>
+    <div class="grid-container">
+        <div class="grid-item">
+            <div id="chart1" class="chart"></div>
+        </div>
+        <div class="grid-item">
+            <div id="chart2" class="chart"></div>
+        </div>
+    </div>
 </body>
 
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
@@ -21,6 +42,8 @@
 </script>
 <script type="text/javascript">
     var graphs1= {{graph | safe}};
-    Plotly.plot('chart1',graphs1,{});   
+    Plotly.plot('chart1',graphs1,{});  
+    var graphs2= {{graphJSON | safe}};
+    Plotly.plot('chart2',graphs2,{});   
 </script>
 </html>
