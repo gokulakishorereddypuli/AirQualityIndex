@@ -6,7 +6,7 @@ datetime
 Flask
 seaborn
 matplotlib
-plotly
+plotpy==1.2.0
 warnings
 sklearn
 
