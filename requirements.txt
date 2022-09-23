@@ -6,9 +6,9 @@ datetime
 Flask
 seaborn
 matplotlib
-plotpy==1.2.0
+plotpy==2.8.0
 sklearn==0.0
-tensorflow==2.10.0
+tensorflow<=2.9.0
 statsmodels==0.13.2
 pmdarima==2.0.1
 
