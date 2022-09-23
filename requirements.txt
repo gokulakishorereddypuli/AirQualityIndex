@@ -1,0 +1,12 @@
+pandas
+numpy
+json
+requests
+datetime
+Flask
+seaborn
+matplotlib
+plotly
+warnings
+sklearn
+
