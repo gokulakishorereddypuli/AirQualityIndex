@@ -11,6 +11,8 @@ import warnings
 warnings.filterwarnings("ignore")
 from statsmodels.tsa.arima.model import ARIMA
 from statsmodels.tsa.base import prediction
+
+from sklearn import metrics
 """
 df=pd.read_csv('https://raw.githubusercontent.com/PULI-GOKULA-KISHORE-REDDY/IBM-HACK-CHALLENGE/main/data.csv',index_col='datetime',parse_dates=True)
 df=df.dropna()
