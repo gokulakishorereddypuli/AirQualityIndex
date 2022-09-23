@@ -1,6 +1,6 @@
 pandas
 numpy
-json
+jsonlib
 requests
 datetime
 Flask
