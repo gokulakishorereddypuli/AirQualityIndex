@@ -211,15 +211,23 @@ def notfound_404():
     return render_template('404.html')
 @app.route('/graph-view')
 def graph():
-
-    df=weatherbit(1,2)
-    fig = px.bar(df, x="Date-Time", y='AQI',color="AQI",  barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="AQI of Delhi")
-    fig1 = px.bar(df, x="Date-Time", y='SO2', color="SO2", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="SO2 Concentrations of Delhi")
-    graphJSON = json.dumps(fig,cls=plotly.utils.PlotlyJSONEncoder)
-    graph1 = json.dumps(fig1,cls=plotly.utils.PlotlyJSONEncoder)
-    return render_template('graph.html', graphJSON=graphJSON,graph=graph1)
-
-    
+    df=pd.read_csv('files/datasets/aqi_predicted_hour_data.csv')
+    df=df.rename(columns={'aqi':'AQI','so2':'SO2','no2':'NO2','pm10':'PM10','pm25':'PM2.5','co':'CO','o3':'O3','timestamp_local':'Date-Time'})
+    fig_aqi= px.bar(df, x="Date-Time", y='AQI',color="AQI",  barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="AQI")
+    fig_so2 = px.bar(df, x="Date-Time", y='SO2', color="SO2", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="SO2 Concentration")
+    fig_no2= px.bar(df, x="Date-Time", y='NO2', color="NO2", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="NO2 Concentrations")
+    fig_o3 = px.bar(df, x="Date-Time", y='O3', color="O3", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="O3 Concentrations")
+    fig_co= px.bar(df, x="Date-Time", y='CO', color="CO", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="CO Concentrations")
+    fig_PM10= px.bar(df, x="Date-Time", y='PM10', color="PM10", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="PM10 Concentrations")
+    fig_PM25= px.bar(df, x="Date-Time", y='PM2.5', color="PM2.5", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="PM2.5 Concentrations")
+    graph_aqi = json.dumps(fig_aqi,cls=plotly.utils.PlotlyJSONEncoder)
+    graph_so2= json.dumps(fig_so2,cls=plotly.utils.PlotlyJSONEncoder)
+    graph_no2= json.dumps(fig_no2,cls=plotly.utils.PlotlyJSONEncoder)
+    graph_o3= json.dumps(fig_o3,cls=plotly.utils.PlotlyJSONEncoder)
+    graph_co= json.dumps(fig_co,cls=plotly.utils.PlotlyJSONEncoder)
+    graph_pm10= json.dumps(fig_PM10,cls=plotly.utils.PlotlyJSONEncoder)
+    graph_pm25= json.dumps(fig_PM25,cls=plotly.utils.PlotlyJSONEncoder)
+    return render_template('graph.html',graph_aqi=graph_aqi,graph_so2=graph_so2,graph_no2=graph_no2,graph_o3=graph_o3,graph_co=graph_co,graph_pm10=graph_pm10,graph_pm25=graph_pm25)
 
 if __name__ == "__main__":
     app.run(debug=True)

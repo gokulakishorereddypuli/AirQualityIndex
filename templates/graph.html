@@ -22,28 +22,62 @@
  </style>
     <div class="grid-container">
         <div class="grid-item">
-            <div id="chart" class="chart"></div>
+            <div id="graph_aqi" class="chart"></div>
         </div>
       </div>
     <div class="grid-container">
         <div class="grid-item">
-            <div id="chart1" class="chart"></div>
+            <div id="graph_pm10" class="chart"></div>
         </div>
         <div class="grid-item">
-            <div id="chart2" class="chart"></div>
+            <div id="graph_pm25" class="chart"></div>
+        </div>
+    </div>
+    <div class="grid-container">
+        <div class="grid-item">
+            <div id="graph_no2" class="chart"></div>
+        </div>
+        <div class="grid-item">
+            <div id="graph_so2" class="chart"></div>
+        </div>
+    </div>
+    <div class="grid-container">
+        <div class="grid-item">
+            <div id="graph_o3" class="chart"></div>
+        </div>
+        <div class="grid-item">
+            <div id="graph_co" class="chart"></div>
         </div>
     </div>
 </body>
 
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 <script type="text/javascript">
-    var graphs = {{graphJSON | safe}};
-    Plotly.plot('chart',graphs,{});   
+    var graph_aqi = {{ graph_aqi| safe}};
+    Plotly.plot('graph_aqi',graph_aqi,{});    
 </script>
 <script type="text/javascript">
-    var graphs1= {{graph | safe}};
-    Plotly.plot('chart1',graphs1,{});  
-    var graphs2= {{graphJSON | safe}};
-    Plotly.plot('chart2',graphs2,{});   
+    var graph_pm10= {{graph_pm10 | safe}};
+    Plotly.plot('graph_pm10',graph_pm10,{});     
+</script>
+<script type="text/javascript">
+    var graph_pm25= {{graph_pm25 | safe}};  
+    Plotly.plot('graph_pm25',graph_pm25,{});   
+</script>
+<script type="text/javascript">
+    var graph_so2= {{graph_so2 | safe}};  
+    Plotly.plot('graph_so2',graph_so2,{});   
+</script>
+<script type="text/javascript">
+    var graph_no2= {{graph_no2 | safe}};  
+    Plotly.plot('graph_no2',graph_no2,{});   
+</script>
+<script type="text/javascript">
+    var graph_co= {{graph_co | safe}};  
+    Plotly.plot('graph_co',graph_co,{});   
+</script>
+<script type="text/javascript">
+    var graph_o3= {{graph_o3 | safe}};  
+    Plotly.plot('graph_o3',graph_o3,{});   
 </script>
 </html>
