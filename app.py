@@ -3,7 +3,10 @@ import numpy as np
 import json
 import requests
 from datetime import datetime 
-
+from datetime import timedelta
+import datetime
+from datetime import time
+from datetime import date
 
 # Flask app
 import flask
@@ -36,7 +39,8 @@ from modules.weather_apis import *
 from modules.aqi_index_calculation import *
 from modules.weather_prediction import *
 from modules.aqi_api import *
-loca=''
+#  from tempfile.timeseries import *
+location1=''
 """
 dataset={'city_day':'https://drive.google.com/file/d/158j8UBocM-wzIF29fsiBVAmfwQA2JVIV/view?usp=sharing',
          'city_hour' :'https://drive.google.com/file/d/1vNRx81y6CehUR81t9oNiyirrE3F7Rwzj/view?usp=sharing',
@@ -168,12 +172,68 @@ print(data["CO"]['concentration'])
 """
 
 #  df.to_csv("aqi_data.csv")
+# logo convertion
+def weatherdays(test):
+  j=0
+  test['Day']=''
+  for i in range(len(test['temp'])):
+    if(j>7):
+      break
+    date=datetime.today()+timedelta(days=j)
+    month=date.strftime('%b')
+    da=date.strftime('%d')
+    test['Day'][i]=month+" "+da
+    if(test['temp'][i]<=24 and test['temp'][i]<=36):
+      print(date," ",test['temp'][i],test['weather'][i])
+    elif(test['temp'][i]<=22 and test['temp'][i]<=34):
+      print(date," ",test['temp'][i],test['weather'][i])
+    elif(test['temp'][i]<=21 and test['temp'][i]<=30):
+      print(date," ",test['temp'][i],test['weather'][i])
+    elif(test['temp'][i]<=16 and test['temp'][i]<=32):
+      print(date," ",test['temp'][i],test['weather'][i])
+    elif(test['temp'][i]<=16 and test['temp'][i]<=32):
+      print(date," ",test['temp'][i],test['weather'][i])
+    j+=1
+  return test
+
 
 app = Flask(__name__)
-@app.route('/')    
+@app.route('/',methods=['GET','POST'])    
 @app.route('/home')
 def login():
-    return render_template('index.html')
+    if flask.request.method == 'GET': 
+        df=pd.read_csv('files/datasets/weather.csv')
+        weather=weatherdays(df)
+        df=df[['timestamp_local','temp']]
+        df=df.rename(columns={'timestamp_local':'Timeline','temp':'Temperature'})
+        fig = px.line(df, x="Timeline", y="Temperature",title="Weather Forecasting (Celsius)")
+        graph_weather = json.dumps(fig,cls=plotly.utils.PlotlyJSONEncoder)
+        return render_template('index.html',weather=weather.iloc[1:7],graph_weather=graph_weather,today=weather.iloc[0])
+    else:
+        print("x")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @app.route('/news')    
 def news():
     return render_template('news.html')
@@ -190,14 +250,13 @@ def photos():
 
 @app.route('/aqi',methods=['POST','GET'])
 def aqi():
-    global loca
+    global location1
     try:
-        if flask.request.method == 'POST':
-            
+        if flask.request.method == 'POST':  
             x = [x for x in request.form.values()]
             print(x)
             location=x[0]
-            loca=x[0]
+            location1=x[0]
             latitude=x[1]
             longitude=x[2]
             location=location.split(',')
@@ -269,7 +328,7 @@ def aqi():
                                                          AQI={'max':df['AQI'].max(),'avg':df['AQI'].mean(),'min':df['AQI'].min()},month=month,date=da,graph_aqi=graph_aqi,graph_so2=graph_so2,graph_no2=graph_no2,graph_o3=graph_o3,graph_co=graph_co,graph_pm10=graph_pm10,graph_pm25=graph_pm25)
     except Exception as e:
             print(e)
-            loc=loca
+            loc=location1
             print(loc)
             loc=loc.split(',')
             loc=loc[0]
@@ -280,7 +339,7 @@ def aqi():
             df=pd.read_csv('files\\datasets\\aqi_predicted_hour_data.csv')
             df=df.iloc[:99]
             df=df.rename(columns={'aqi':'AQI','so2':'SO2','no2':'NO2','pm10':'PM10','pm25':'PM2.5','co':'CO','o3':'O3','timestamp_local':'Date-Time'})
-            fig_aqi= px.bar(df, x="Date-Time", y='AQI',color="AQI",  barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="AQI "+loc)
+            fig_aqi= px.bar(df, x="Date-Time", y='AQI',color="AQI",  barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="AQI 1"+loc)
             fig_so2 = px.bar(df, x="Date-Time", y='SO2', color="SO2", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="SO2 Concentration "+loc)
             fig_no2= px.bar(df, x="Date-Time", y='NO2', color="NO2", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="NO2 Concentrations "+loc)
             fig_o3 = px.bar(df, x="Date-Time", y='O3', color="O3", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="O3 Concentrations "+loc)
