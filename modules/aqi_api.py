@@ -35,6 +35,10 @@ def ad_test(dataset):
     for key,val in dftest[4].items():
         print('\t',key,":" ,val)
 
+
+
+
+
 def aqipredict(latitude ,longitude,location):
     url = "https://air-quality.p.rapidapi.com/forecast/airquality"
     querystring = {"lat":latitude,"lon":longitude,"hours":"16008"}
@@ -69,8 +73,11 @@ def aqipredict(latitude ,longitude,location):
     model.summary()
     pred=model.predict(start=1,end=83,type='levels')
     pred['Date']=pd.DataFrame(dates)
-    return pred,df_past
+    return df_past,pred
 
+"""
 x,y=aqipredict(15.8281,78.0373,"kurnool")
 print(x)
 print(y)
+
+"""
