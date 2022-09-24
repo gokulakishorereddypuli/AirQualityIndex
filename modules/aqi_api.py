@@ -37,31 +37,7 @@ def ad_test(dataset):
 
 
 
-
-
-def aqipredict(latitude ,longitude,location):
-    url = "https://air-quality.p.rapidapi.com/forecast/airquality"
-    querystring = {"lat":latitude,"lon":longitude,"hours":"16008"}
-    headers = {
-        "X-RapidAPI-Key": "4f7bb14128msh9b291ceae57c2d4p12b8b5jsn9580099f1b46",
-        "X-RapidAPI-Host": "air-quality.p.rapidapi.com"
-    }
-    response = requests.request("GET", url, headers=headers, params=querystring)
-    data_past=response.text
-    data_past=json.loads(data_past)
-    df_past= pd.DataFrame(data_past['data'])
-    df_past['city']=data_past['city_name']
-    df_past['latitude']=data_past['lat']
-    df_past['longitude']=data_past['lon']
-    df_past['timezone']=data_past['timezone']
-    dates=date_time()
-    df_1=pd.read_csv('files/datasets/aqi_predicted_hour_data.csv')
-    df_1=pd.concat([df_past,df_1])
-    df_1=df_1[[	'aqi','pm10','pm25','o3','timestamp_local','so2','no2','timestamp_utc','datetime','co','ts','city','latitude','longitude',	'timezone']]
-    os.remove("files/datasets/aqi_predicted_hour_data.csv")
-    df_1.to_csv('files/datasets/aqi_predicted_hour_data.csv')
-    df=pd.read_csv('files/datasets/aqi_predicted_hour_data.csv',index_col='datetime',parse_dates=True)
-    print(df.columns)
+def train():
     # df=df.dropna()
     ad_test(df['aqi'])
     stepwise_fit=auto_arima(df["aqi"],trace=True,supress_warnings=True)
@@ -73,7 +49,37 @@ def aqipredict(latitude ,longitude,location):
     model.summary()
     pred=model.predict(start=1,end=83,type='levels')
     pred['Date']=pd.DataFrame(dates)
-    return df_past,pred
+
+def aqipredict(latitude ,longitude):
+    try: 
+        url = "https://air-quality.p.rapidapi.com/forecast/airquality"
+        querystring = {"lat":latitude,"lon":longitude,"hours":"16008"}
+        headers = {
+        "X-RapidAPI-Key": "4f7bb14128msh9b291ceae57c2d4p12b8b5jsn9580099f1b46",
+        "X-RapidAPI-Host": "air-quality.p.rapidapi.com"
+        }
+        response = requests.request("GET", url, headers=headers, params=querystring)
+        data_past=response.text
+        data_past=json.loads(data_past) 
+        df_past= pd.DataFrame(data_past['data'])
+        df_past['city']=data_past['city_name']
+        df_past['latitude']=data_past['lat']
+        df_past['longitude']=data_past['lon']
+        df_past['timezone']=data_past['timezone']
+        dates=date_time()
+        df_1=pd.read_csv('files/datasets/aqi_predicted_hour_data.csv')
+        df_1=pd.concat([df_past,df_1])
+        df_1=df_1[[	'aqi','pm10','pm25','o3','timestamp_local','so2','no2','timestamp_utc','datetime','co','ts','city','latitude','longitude',	'timezone']]
+        df_1.drop_duplicates(subset=None, keep='first', inplace=False, ignore_index=False)
+        os.remove("files/datasets/aqi_predicted_hour_data.csv")
+        df_1.to_csv('files/datasets/aqi_predicted_hour_data.csv')
+        df=pd.read_csv('files/datasets/aqi_predicted_hour_data.csv',index_col='datetime',parse_dates=True)
+        print(df.columns)
+    except Exception as e:
+        print(e)
+        df_past=pd.read_csv('files\\datasets\\aqi_predicted_hour_data.csv')
+        df_past=df_past.iloc[:99]
+    return df_past
 
 """
 x,y=aqipredict(15.8281,78.0373,"kurnool")

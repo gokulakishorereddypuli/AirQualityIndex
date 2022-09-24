@@ -113,17 +113,17 @@
 									<table>
 										<tr>
 											<td>pollutants</td>
-											<td>concentration</td>
-											<td>aqi</td>
+											<td>MIN</td>
+											<td>AVG</td>
+											<td>MAX</td>
 										</tr>
 								{% for obj in data %} 
 								<tr>
-									{% if obj   != 'overall_aqi'%}
 									<td>{{obj}}</td>
+									<td>{{data[obj]['min']}}</td>
+									<td>{{data[obj]['avg']}}</td>
+									<td>{{data[obj]['max']}}</td>
 									
-									<td>{{data[obj]['concentration']}}</td>
-									<td>{{data[obj]['aqi']}}</td>
-									{% endif %}
 								</tr>
 					
 								{% endfor %}
