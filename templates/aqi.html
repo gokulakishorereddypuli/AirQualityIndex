@@ -20,6 +20,25 @@
 		<![endif]-->
 
 	</head>
+	<style>
+		.margins{ 
+			margin-left: 1000px;
+			margin-right: 1000px;
+		}
+		.grid-container {
+			 display : flex;
+			  background-color: none;
+			  padding: 2px;
+			}
+			.grid-item {
+			  background-color: rgba(255, 255, 255, 0.8);
+			  padding: 2px;
+			  font-size: 30px;
+			  text-align: center;
+			  width : 900%
+			}
+	
+	 </style>
 
 
 	<body>
@@ -55,7 +74,7 @@
 
 			<div class="hero" data-bg-image="images/banner.png">
 				<div class="container">
-					<form action="/find-aqi-of-place" class="find-location" method="POST">
+					<form action="/aqi" class="find-location" method="POST">
 						<input type="text" name="autocomplete" id="autocomplete" placeholder="Find your location..." required>
 						<input type="hidden" id="latitude" name="latitude" class="form-control">
 						<input type="hidden" name="longitude" id="longitude" class="form-control">
@@ -111,7 +130,6 @@
 							</table>
 								</div>
 								
-							
 								<!-- <span><img src="/static/images/icon-umberella.png" alt="">20%</span>
 								<span><img src="/static/images/icon-wind.png" alt="">18km/h</span>
 								<span><img src="/static/images/icon-compass.png" alt="">East</span> -->
@@ -119,8 +137,38 @@
 						</div>
 						
 					</div>
+					<div class="grid-container">
+						<div class="grid-item">
+							<div id="graph_aqi" class="chart"></div>
+						</div>
+					  </div>
+					<div class="grid-container">
+						<div class="grid-item">
+							<div id="graph_pm10" class="chart"></div>
+						</div>
+						<div class="grid-item">
+							<div id="graph_pm25" class="chart"></div>
+						</div>
+					</div>
+					<div class="grid-container">
+						<div class="grid-item">
+							<div id="graph_no2" class="chart"></div>
+						</div>
+						<div class="grid-item">
+							<div id="graph_so2" class="chart"></div>
+						</div>
+					</div>
+					<div class="grid-container">
+						<div class="grid-item">
+							<div id="graph_o3" class="chart"></div>
+						</div>
+						<div class="grid-item">
+							<div id="graph_co" class="chart"></div>
+						</div>
+					</div>
 				</div>
 				
+
 			</main> <!-- .main-content -->
 
 			<footer class="site-footer">
@@ -175,6 +223,39 @@
 				});
 			}
 		</script>
+
+
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script type="text/javascript">
+    var graph_aqi = {{ graph_aqi| safe}};
+    Plotly.plot('graph_aqi',graph_aqi,{});    
+</script>
+<script type="text/javascript">
+    var graph_pm10= {{graph_pm10 | safe}};
+    Plotly.plot('graph_pm10',graph_pm10,{});     
+</script>
+<script type="text/javascript">
+    var graph_pm25= {{graph_pm25 | safe}};  
+    Plotly.plot('graph_pm25',graph_pm25,{});   
+</script>
+<script type="text/javascript">
+    var graph_so2= {{graph_so2 | safe}};  
+    Plotly.plot('graph_so2',graph_so2,{});   
+</script>
+<script type="text/javascript">
+    var graph_no2= {{graph_no2 | safe}};  
+    Plotly.plot('graph_no2',graph_no2,{});   
+</script>
+<script type="text/javascript">
+    var graph_co= {{graph_co | safe}};  
+    Plotly.plot('graph_co',graph_co,{});   
+</script>
+<script type="text/javascript">
+    var graph_o3= {{graph_o3 | safe}};  
+    Plotly.plot('graph_o3',graph_o3,{});   
+</script>
+
 	</body>
+
 
 </html>
