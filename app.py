@@ -215,25 +215,6 @@ def login():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @app.route('/news')    
 def news():
     return render_template('news.html')
@@ -248,10 +229,11 @@ def photos():
     return render_template('photos.html')
 
 
+
 @app.route('/aqi',methods=['POST','GET'])
 def aqi():
-    global location1
-    try:
+        global location1
+    
         if flask.request.method == 'POST':  
             x = [x for x in request.form.values()]
             print(x)
@@ -269,7 +251,7 @@ def aqi():
                 date = datetime.today()
                 month=date.strftime('%b')
                 da=date.strftime('%d')
-                df=aqipredict(28.7041, 77.1025,"Delhi")
+                df=aqipredict(latitude,longitude)
                 df=df.rename(columns={'aqi':'AQI','so2':'SO2','no2':'NO2','pm10':'PM10','pm25':'PM2.5','co':'CO','o3':'O3','timestamp_local':'Date-Time'})
                 fig_aqi= px.bar(df, x="Date-Time", y='AQI',color="AQI",  barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="AQI "+location)
                 fig_so2 = px.bar(df, x="Date-Time", y='SO2', color="SO2", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="SO2 Concentration "+location)
@@ -326,7 +308,7 @@ def aqi():
                                                          'PM2.5': {'max':df['PM2.5'].max(), 'min':df['PM2.5'].min(),'avg':df['PM2.5'].mean() },
                                                          'PM10': {'max':df['PM10'].max(), 'min':df['PM10'].min(),'avg':df['PM10'].mean() } },
                                                          AQI={'max':df['AQI'].max(),'avg':df['AQI'].mean(),'min':df['AQI'].min()},month=month,date=da,graph_aqi=graph_aqi,graph_so2=graph_so2,graph_no2=graph_no2,graph_o3=graph_o3,graph_co=graph_co,graph_pm10=graph_pm10,graph_pm25=graph_pm25)
-    except Exception as e:
+"""
             print(e)
             loc=location1
             print(loc)
@@ -361,8 +343,7 @@ def aqi():
                                                          'PM10': {'max':df['PM10'].max(), 'min':df['PM10'].min(),'avg':df['PM10'].mean() } },
                                                          AQI={'max':df['AQI'].max(),'avg':df['AQI'].mean(),'min':df['AQI'].min()},month=month,date=da,graph_aqi=graph_aqi,graph_so2=graph_so2,graph_no2=graph_no2,graph_o3=graph_o3,graph_co=graph_co,graph_pm10=graph_pm10,graph_pm25=graph_pm25)
             
-        
-          
+        """          
 @app.route('/find-aqi-of-place',methods=['POST'])
 def find_aqi():
     print(request.get_data)
