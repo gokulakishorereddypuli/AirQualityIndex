@@ -3,7 +3,10 @@ import numpy as np
 import json
 import requests
 from datetime import datetime 
-
+from datetime import timedelta
+import datetime
+from datetime import time
+from datetime import date
 
 # Flask app
 import flask
@@ -36,7 +39,8 @@ from modules.weather_apis import *
 from modules.aqi_index_calculation import *
 from modules.weather_prediction import *
 from modules.aqi_api import *
-
+#  from tempfile.timeseries import *
+location1=''
 """
 dataset={'city_day':'https://drive.google.com/file/d/158j8UBocM-wzIF29fsiBVAmfwQA2JVIV/view?usp=sharing',
          'city_hour' :'https://drive.google.com/file/d/1vNRx81y6CehUR81t9oNiyirrE3F7Rwzj/view?usp=sharing',
@@ -168,12 +172,49 @@ print(data["CO"]['concentration'])
 """
 
 #  df.to_csv("aqi_data.csv")
+# logo convertion
+def weatherdays(test):
+  j=0
+  test['Day']=''
+  for i in range(len(test['temp'])):
+    if(j>7):
+      break
+    date=datetime.today()+timedelta(days=j)
+    month=date.strftime('%b')
+    da=date.strftime('%d')
+    test['Day'][i]=month+" "+da
+    if(test['temp'][i]<=24 and test['temp'][i]<=36):
+      print(date," ",test['temp'][i],test['weather'][i])
+    elif(test['temp'][i]<=22 and test['temp'][i]<=34):
+      print(date," ",test['temp'][i],test['weather'][i])
+    elif(test['temp'][i]<=21 and test['temp'][i]<=30):
+      print(date," ",test['temp'][i],test['weather'][i])
+    elif(test['temp'][i]<=16 and test['temp'][i]<=32):
+      print(date," ",test['temp'][i],test['weather'][i])
+    elif(test['temp'][i]<=16 and test['temp'][i]<=32):
+      print(date," ",test['temp'][i],test['weather'][i])
+    j+=1
+  return test
+
 
 app = Flask(__name__)
-@app.route('/')    
+@app.route('/',methods=['GET','POST'])    
 @app.route('/home')
 def login():
-    return render_template('index.html')
+    if flask.request.method == 'GET': 
+        df=pd.read_csv('files/datasets/weather.csv')
+        weather=weatherdays(df)
+        df=df[['timestamp_local','temp']]
+        df=df.rename(columns={'timestamp_local':'Timeline','temp':'Temperature'})
+        fig = px.line(df, x="Timeline", y="Temperature",title="Weather Forecasting (Celsius)")
+        graph_weather = json.dumps(fig,cls=plotly.utils.PlotlyJSONEncoder)
+        return render_template('index.html',weather=weather.iloc[1:7],graph_weather=graph_weather,today=weather.iloc[0])
+    else:
+        print("x")
+
+
+
+
 @app.route('/news')    
 def news():
     return render_template('news.html')
@@ -188,28 +229,70 @@ def photos():
     return render_template('photos.html')
 
 
+
 @app.route('/aqi',methods=['POST','GET'])
 def aqi():
-    if flask.request.method == 'POST':
-        x = [x for x in request.form.values()]
-        print(x)
-        if(len(x[1])>0 and len(x[2])>0):
+        global location1
+    
+        if flask.request.method == 'POST':  
+            x = [x for x in request.form.values()]
+            print(x)
             location=x[0]
+            location1=x[0]
             latitude=x[1]
             longitude=x[2]
-            #data={'CO': {'concentration': 961.3, 'aqi': 10}, 'NO2': {'concentration': 50.04, 'aqi': 62}, 'O3': {'concentration': 30.76, 'aqi': 26}, 'SO2': {'concentration': 79.16, 'aqi': 70}, 'PM2.5': {'concentration': 45.22, 'aqi': 109}, 'PM10': {'concentration': 57.56, 'aqi': 51}, 'overall_aqi': 109}
+            location=location.split(',')
+            location=location[0]
+            if(len(x[1])>0 and len(x[2])>0):
+                location=x[0]
+                latitude=x[1]
+                longitude=x[2]
+                #data={'CO': {'concentration': 961.3, 'aqi': 10}, 'NO2': {'concentration': 50.04, 'aqi': 62}, 'O3': {'concentration': 30.76, 'aqi': 26}, 'SO2': {'concentration': 79.16, 'aqi': 70}, 'PM2.5': {'concentration': 45.22, 'aqi': 109}, 'PM10': {'concentration': 57.56, 'aqi': 51}, 'overall_aqi': 109}
+                date = datetime.today()
+                month=date.strftime('%b')
+                da=date.strftime('%d')
+                df=aqipredict(latitude,longitude)
+                df=df.rename(columns={'aqi':'AQI','so2':'SO2','no2':'NO2','pm10':'PM10','pm25':'PM2.5','co':'CO','o3':'O3','timestamp_local':'Date-Time'})
+                fig_aqi= px.bar(df, x="Date-Time", y='AQI',color="AQI",  barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="AQI "+location)
+                fig_so2 = px.bar(df, x="Date-Time", y='SO2', color="SO2", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="SO2 Concentration "+location)
+                fig_no2= px.bar(df, x="Date-Time", y='NO2', color="NO2", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="NO2 Concentrations "+location)
+                fig_o3 = px.bar(df, x="Date-Time", y='O3', color="O3", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="O3 Concentrations "+location)
+                fig_co= px.bar(df, x="Date-Time", y='CO', color="CO", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="CO Concentrations "+location)
+                fig_PM10= px.bar(df, x="Date-Time", y='PM10', color="PM10", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="PM10 Concentrations "+location)
+                fig_PM25= px.bar(df, x="Date-Time", y='PM2.5', color="PM2.5", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="PM2.5 Concentrations "+location)
+                graph_aqi = json.dumps(fig_aqi,cls=plotly.utils.PlotlyJSONEncoder)
+                graph_so2= json.dumps(fig_so2,cls=plotly.utils.PlotlyJSONEncoder)
+                graph_no2= json.dumps(fig_no2,cls=plotly.utils.PlotlyJSONEncoder)
+                graph_o3= json.dumps(fig_o3,cls=plotly.utils.PlotlyJSONEncoder)
+                graph_co= json.dumps(fig_co,cls=plotly.utils.PlotlyJSONEncoder)
+                graph_pm10= json.dumps(fig_PM10,cls=plotly.utils.PlotlyJSONEncoder)
+                graph_pm25= json.dumps(fig_PM25,cls=plotly.utils.PlotlyJSONEncoder)
+                # return render_template('graph.html',graph_aqi=graph_aqi,graph_so2=graph_so2,graph_no2=graph_no2,graph_o3=graph_o3,graph_co=graph_co,graph_pm10=graph_pm10,graph_pm25=graph_pm25)
+                return render_template('aqi.html',data={'CO': {'max':df['CO'].max(), 'min':df['CO'].min(),'avg':df['CO'].mean() },
+                                                         'NO2': {'max':df['NO2'].max(), 'min':df['NO2'].min(),'avg':df['NO2'].mean() }, 
+                                                         'O3': {'max':df['O3'].max(), 'min':df['O3'].min(),'avg':df['O3'].mean() },
+                                                         'SO2': {'max':df['SO2'].max(), 'min':df['SO2'].min(),'avg':df['SO2'].mean() },
+                                                         'PM2.5': {'max':df['PM2.5'].max(), 'min':df['PM2.5'].min(),'avg':df['PM2.5'].mean() },
+                                                         'PM10': {'max':df['PM10'].max(), 'min':df['PM10'].min(),'avg':df['PM10'].mean() } },
+                                                         AQI={'max':df['AQI'].max(),'avg':df['AQI'].mean(),'min':df['AQI'].min()},month=month,date=da,graph_aqi=graph_aqi,graph_so2=graph_so2,graph_no2=graph_no2,graph_o3=graph_o3,graph_co=graph_co,graph_pm10=graph_pm10,graph_pm25=graph_pm25)
+            else:
+                return render_template('404.html')
+        else:
+            loc="Delhi"
             date = datetime.today()
             month=date.strftime('%b')
             da=date.strftime('%d')
-            df,x=aqipredict(28.7041, 77.1025,"Delhi")
+            #df=pd.read_csv('files/datasets/aqi_predicted_hour_data.csv')
+            # default delhi prediction
+            df=aqipredict(28.7041,77.1025)
             df=df.rename(columns={'aqi':'AQI','so2':'SO2','no2':'NO2','pm10':'PM10','pm25':'PM2.5','co':'CO','o3':'O3','timestamp_local':'Date-Time'})
-            fig_aqi= px.bar(df, x="Date-Time", y='AQI',color="AQI",  barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="AQI "+location)
-            fig_so2 = px.bar(df, x="Date-Time", y='SO2', color="SO2", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="SO2 Concentration "+location)
-            fig_no2= px.bar(df, x="Date-Time", y='NO2', color="NO2", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="NO2 Concentrations "+location)
-            fig_o3 = px.bar(df, x="Date-Time", y='O3', color="O3", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="O3 Concentrations "+location)
-            fig_co= px.bar(df, x="Date-Time", y='CO', color="CO", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="CO Concentrations "+location)
-            fig_PM10= px.bar(df, x="Date-Time", y='PM10', color="PM10", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="PM10 Concentrations "+location)
-            fig_PM25= px.bar(df, x="Date-Time", y='PM2.5', color="PM2.5", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="PM2.5 Concentrations "+location)
+            fig_aqi= px.bar(df, x="Date-Time", y='AQI',color="AQI",  barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="AQI "+loc)
+            fig_so2 = px.bar(df, x="Date-Time", y='SO2', color="SO2", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="SO2 Concentration "+loc)
+            fig_no2= px.bar(df, x="Date-Time", y='NO2', color="NO2", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="NO2 Concentrations "+loc)
+            fig_o3 = px.bar(df, x="Date-Time", y='O3', color="O3", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="O3 Concentrations "+loc)
+            fig_co= px.bar(df, x="Date-Time", y='CO', color="CO", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="CO Concentrations "+loc)
+            fig_PM10= px.bar(df, x="Date-Time", y='PM10', color="PM10", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="PM10 Concentrations "+loc)
+            fig_PM25= px.bar(df, x="Date-Time", y='PM2.5', color="PM2.5", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="PM2.5 Concentrations "+loc)
             graph_aqi = json.dumps(fig_aqi,cls=plotly.utils.PlotlyJSONEncoder)
             graph_so2= json.dumps(fig_so2,cls=plotly.utils.PlotlyJSONEncoder)
             graph_no2= json.dumps(fig_no2,cls=plotly.utils.PlotlyJSONEncoder)
@@ -218,37 +301,49 @@ def aqi():
             graph_pm10= json.dumps(fig_PM10,cls=plotly.utils.PlotlyJSONEncoder)
             graph_pm25= json.dumps(fig_PM25,cls=plotly.utils.PlotlyJSONEncoder)
             # return render_template('graph.html',graph_aqi=graph_aqi,graph_so2=graph_so2,graph_no2=graph_no2,graph_o3=graph_o3,graph_co=graph_co,graph_pm10=graph_pm10,graph_pm25=graph_pm25)
-            return render_template('aqi.html',data={'CO': {'concentration': 961.3, 'aqi': 10}, 'NO2': {'concentration': 50.04, 'aqi': 62}, 'O3': {'concentration': 30.76, 'aqi': 26}, 'SO2': {'concentration': 79.16, 'aqi': 70}, 'PM2.5': {'concentration': 45.22, 'aqi': 109}, 'PM10': {'concentration': 57.56, 'aqi': 51}, 'overall_aqi': 109},month=month,date=da,graph_aqi=graph_aqi,graph_so2=graph_so2,graph_no2=graph_no2,graph_o3=graph_o3,graph_co=graph_co,graph_pm10=graph_pm10,graph_pm25=graph_pm25)
-        else:
-            return render_template('404.html')
-    else:
-        date = datetime.today()
-        month=date.strftime('%b')
-        da=date.strftime('%d')
-
-        #df=pd.read_csv('files/datasets/aqi_predicted_hour_data.csv')
-        # default delhi prediction
-        df,x=aqipredict(28.7041, 77.1025,"Delhi")
-        df=df.rename(columns={'aqi':'AQI','so2':'SO2','no2':'NO2','pm10':'PM10','pm25':'PM2.5','co':'CO','o3':'O3','timestamp_local':'Date-Time'})
-        fig_aqi= px.bar(df, x="Date-Time", y='AQI',color="AQI",  barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="AQI")
-        fig_so2 = px.bar(df, x="Date-Time", y='SO2', color="SO2", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="SO2 Concentration")
-        fig_no2= px.bar(df, x="Date-Time", y='NO2', color="NO2", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="NO2 Concentrations")
-        fig_o3 = px.bar(df, x="Date-Time", y='O3', color="O3", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="O3 Concentrations")
-        fig_co= px.bar(df, x="Date-Time", y='CO', color="CO", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="CO Concentrations")
-        fig_PM10= px.bar(df, x="Date-Time", y='PM10', color="PM10", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="PM10 Concentrations")
-        fig_PM25= px.bar(df, x="Date-Time", y='PM2.5', color="PM2.5", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="PM2.5 Concentrations")
-        graph_aqi = json.dumps(fig_aqi,cls=plotly.utils.PlotlyJSONEncoder)
-        graph_so2= json.dumps(fig_so2,cls=plotly.utils.PlotlyJSONEncoder)
-        graph_no2= json.dumps(fig_no2,cls=plotly.utils.PlotlyJSONEncoder)
-        graph_o3= json.dumps(fig_o3,cls=plotly.utils.PlotlyJSONEncoder)
-        graph_co= json.dumps(fig_co,cls=plotly.utils.PlotlyJSONEncoder)
-        graph_pm10= json.dumps(fig_PM10,cls=plotly.utils.PlotlyJSONEncoder)
-        graph_pm25= json.dumps(fig_PM25,cls=plotly.utils.PlotlyJSONEncoder)
-        # return render_template('graph.html',graph_aqi=graph_aqi,graph_so2=graph_so2,graph_no2=graph_no2,graph_o3=graph_o3,graph_co=graph_co,graph_pm10=graph_pm10,graph_pm25=graph_pm25)
-        return render_template('aqi.html',data={'CO': {'concentration': 961.3, 'aqi': 10}, 'NO2': {'concentration': 50.04, 'aqi': 62}, 'O3': {'concentration': 30.76, 'aqi': 26}, 'SO2': {'concentration': 79.16, 'aqi': 70}, 'PM2.5': {'concentration': 45.22, 'aqi': 109}, 'PM10': {'concentration': 57.56, 'aqi': 51}, 'overall_aqi': 109},month=month,date=da,graph_aqi=graph_aqi,graph_so2=graph_so2,graph_no2=graph_no2,graph_o3=graph_o3,graph_co=graph_co,graph_pm10=graph_pm10,graph_pm25=graph_pm25)
-
-
-from flask import request
+            return render_template('aqi.html',location=loc,data={'CO': {'max':df['CO'].max(), 'min':df['CO'].min(),'avg':df['CO'].mean() },
+                                                         'NO2': {'max':df['NO2'].max(), 'min':df['NO2'].min(),'avg':df['NO2'].mean() }, 
+                                                         'O3': {'max':df['O3'].max(), 'min':df['O3'].min(),'avg':df['O3'].mean() },
+                                                         'SO2': {'max':df['SO2'].max(), 'min':df['SO2'].min(),'avg':df['SO2'].mean() },
+                                                         'PM2.5': {'max':df['PM2.5'].max(), 'min':df['PM2.5'].min(),'avg':df['PM2.5'].mean() },
+                                                         'PM10': {'max':df['PM10'].max(), 'min':df['PM10'].min(),'avg':df['PM10'].mean() } },
+                                                         AQI={'max':df['AQI'].max(),'avg':df['AQI'].mean(),'min':df['AQI'].min()},month=month,date=da,graph_aqi=graph_aqi,graph_so2=graph_so2,graph_no2=graph_no2,graph_o3=graph_o3,graph_co=graph_co,graph_pm10=graph_pm10,graph_pm25=graph_pm25)
+"""
+            print(e)
+            loc=location1
+            print(loc)
+            loc=loc.split(',')
+            loc=loc[0]
+            date = datetime.today()
+            month=date.strftime('%b')
+            da=date.strftime('%d')
+            print(e,"error occured")
+            df=pd.read_csv('files\\datasets\\aqi_predicted_hour_data.csv')
+            df=df.iloc[:99]
+            df=df.rename(columns={'aqi':'AQI','so2':'SO2','no2':'NO2','pm10':'PM10','pm25':'PM2.5','co':'CO','o3':'O3','timestamp_local':'Date-Time'})
+            fig_aqi= px.bar(df, x="Date-Time", y='AQI',color="AQI",  barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="AQI 1"+loc)
+            fig_so2 = px.bar(df, x="Date-Time", y='SO2', color="SO2", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="SO2 Concentration "+loc)
+            fig_no2= px.bar(df, x="Date-Time", y='NO2', color="NO2", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="NO2 Concentrations "+loc)
+            fig_o3 = px.bar(df, x="Date-Time", y='O3', color="O3", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="O3 Concentrations "+loc)
+            fig_co= px.bar(df, x="Date-Time", y='CO', color="CO", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="CO Concentrations "+loc)
+            fig_PM10= px.bar(df, x="Date-Time", y='PM10', color="PM10", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="PM10 Concentrations "+loc)
+            fig_PM25= px.bar(df, x="Date-Time", y='PM2.5', color="PM2.5", barmode="stack",color_continuous_scale=["green", "yellow","orange","red"],title="PM2.5 Concentrations "+loc)
+            graph_aqi = json.dumps(fig_aqi,cls=plotly.utils.PlotlyJSONEncoder)
+            graph_so2= json.dumps(fig_so2,cls=plotly.utils.PlotlyJSONEncoder)
+            graph_no2= json.dumps(fig_no2,cls=plotly.utils.PlotlyJSONEncoder)
+            graph_o3= json.dumps(fig_o3,cls=plotly.utils.PlotlyJSONEncoder)
+            graph_co= json.dumps(fig_co,cls=plotly.utils.PlotlyJSONEncoder)
+            graph_pm10= json.dumps(fig_PM10,cls=plotly.utils.PlotlyJSONEncoder)
+            graph_pm25= json.dumps(fig_PM25,cls=plotly.utils.PlotlyJSONEncoder)
+            return render_template('aqi.html',location=loc,data={'CO': {'max':df['CO'].max(), 'min':df['CO'].min(),'avg':df['CO'].mean() },
+                                                         'NO2': {'max':df['NO2'].max(), 'min':df['NO2'].min(),'avg':df['NO2'].mean() }, 
+                                                         'O3': {'max':df['O3'].max(), 'min':df['O3'].min(),'avg':df['O3'].mean() },
+                                                         'SO2': {'max':df['SO2'].max(), 'min':df['SO2'].min(),'avg':df['SO2'].mean() },
+                                                         'PM2.5': {'max':df['PM2.5'].max(), 'min':df['PM2.5'].min(),'avg':df['PM2.5'].mean() },
+                                                         'PM10': {'max':df['PM10'].max(), 'min':df['PM10'].min(),'avg':df['PM10'].mean() } },
+                                                         AQI={'max':df['AQI'].max(),'avg':df['AQI'].mean(),'min':df['AQI'].min()},month=month,date=da,graph_aqi=graph_aqi,graph_so2=graph_so2,graph_no2=graph_no2,graph_o3=graph_o3,graph_co=graph_co,graph_pm10=graph_pm10,graph_pm25=graph_pm25)
+            
+        """          
 @app.route('/find-aqi-of-place',methods=['POST'])
 def find_aqi():
     print(request.get_data)
@@ -263,7 +358,7 @@ def find_aqi():
         month=date.strftime('%b')
         da=date.strftime('%d')
         #print('-------------------========================================================-======',date,month,da)
-        
+
     
         return render_template('aqi.html',data={'CO': {'concentration': 961.3, 'aqi': 10}, 'NO2': {'concentration': 50.04, 'aqi': 62}, 'O3': {'concentration': 30.76, 'aqi': 26}, 'SO2': {'concentration': 79.16, 'aqi': 70}, 'PM2.5': {'concentration': 45.22, 'aqi': 109}, 'PM10': {'concentration': 57.56, 'aqi': 51}, 'overall_aqi': 109},month=month,date=da)
     return render_template('404.html')

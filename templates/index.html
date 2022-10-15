@@ -69,96 +69,79 @@
 						<div class="today forecast">
 							<div class="forecast-header">
 								<div class="day"></div>
-								<div class="date">6 Oct</div>
+								<div class="date">{{ today['Day'] }}</div>
 							</div> <!-- .forecast-header -->
 							<div class="forecast-content">
 								<div class="location">New Delhi</div>
 								<div class="degree">
-									<div class="num"><sup>o</sup>C</div>
+									<div class="num">{{ today['temp'] }}<sup>o</sup>C</div>
 									<div class="forecast-icon">
-										<img src="/static/images/icons/icon-1.svg" alt="" width=90>
+										{% if today['temp'] > 24 and today['temp'] <36 %}
+										<img src="/static/images/icons/icon-2.svg" alt="" width=90>
+										{% endif %}
+										{% if today['temp'] > 22 and today['temp'] <34 %}
+										<img src="/static/images/icons/icon-2.svg" alt="" width=90>
+										{% endif %}
+										{% if today['temp'] > 20 and today['temp'] <30 %}
+										<img src="/static/images/icons/icon-2.svg" alt="" width=90>
+										{% endif %}
+										{% if today['temp'] > 21 and today['temp'] <32 %}
+										<img src="/static/images/icons/icon-2.svg" alt="" width=90>
+										{% endif %}
+										{% if today['temp'] > 24 and today['temp'] <34 %}
+										<img src="/static/images/icons/icon-2.svg" alt="" width=90>
+										{% endif %}
+										{% if today['temp'] > 10 and today['temp'] <20 %}
+										<img src="/static/images/icons/icon-7.svg" alt="" width=90>
+										{% endif %}
+										
 									</div>	
 								</div>
+<<<<<<< HEAD
 								 
+=======
+								
+>>>>>>> 9d415b64322d3e851fdc0d3d667055c88bb7ef67
 							</div>
 						</div>
+
+						
+						{% for obj in weather.index %}
+	
 						<div class="forecast">
 							<div class="forecast-header">
-								<div class="day">20-10-22</div>
+								<div class="day">{{ weather['Day'][obj] }}</div>
 							</div> <!-- .forecast-header -->
 							<div class="forecast-content">
 								<div class="forecast-icon">
-									<img src="/static/images/icons/icon-3.svg" alt="" width=48>
+										{{today}}
+										{{weather}}
 								</div>
-								<div class="degree">23<sup>o</sup>C</div>
-								<small>18<sup>o</sup></small>
+								<div class="degree">{{ weather['temp'][obj] }}<sup>o</sup>C</div>
+								
 							</div>
+							
 						</div>
-						<div class="forecast">
-							<div class="forecast-header">
-								<div class="day">20-10-22</div>
-							</div> <!-- .forecast-header -->
-							<div class="forecast-content">
-								<div class="forecast-icon">
-									<img src="/static/images/icons/icon-5.svg" alt="" width=48>
-								</div>
-								<div class="degree">23<sup>o</sup>C</div>
-								<small>18<sup>o</sup></small>
-							</div>
-						</div>
-						<div class="forecast">
-							<div class="forecast-header">
-								<div class="day">20-10-22</div>
-							</div> <!-- .forecast-header -->
-							<div class="forecast-content">
-								<div class="forecast-icon">
-									<img src="/static/images/icons/icon-7.svg" alt="" width=48>
-								</div>
-								<div class="degree">23<sup>o</sup>C</div>
-								<small>18<sup>o</sup></small>
-							</div>
-						</div>
-						<div class="forecast">
-							<div class="forecast-header">
-								<div class="day">20-10-22</div>
-							</div> <!-- .forecast-header -->
-							<div class="forecast-content">
-								<div class="forecast-icon">
-									<img src="/static/images/icons/icon-12.svg" alt="" width=48>
-								</div>
-								<div class="degree">23<sup>o</sup>C</div>
-								<small>18<sup>o</sup></small>
-							</div>
-						</div>
-						<div class="forecast">
-							<div class="forecast-header">
-								<div class="day">20-10-22</div>
-							</div> <!-- .forecast-header -->
-							<div class="forecast-content">
-								<div class="forecast-icon">
-									<img src="/static/images/icons/icon-13.svg" alt="" width=48>
-								</div>
-								<div class="degree">23<sup>o</sup>C</div>
-								<small>18<sup>o</sup></small>
-							</div>
-						</div>
-						<div class="forecast">
-							<div class="forecast-header">
-								<div class="day">20-10-22</div>
-							</div> <!-- .forecast-header -->
-							<div class="forecast-content">
-								<div class="forecast-icon">
-									<img src="/static/images/icons/icon-14.svg" alt="" width=48>
-								</div>
-								<div class="degree">23<sup>o</sup>C</div>
-								<small>18<sup>o</sup></small>
-							</div>
-						</div>
+						{% endfor %}
 					</div>
+				</div>
+				<div>
+					<img src="/static/images/icons/icon-1.svg" alt="" width=48>
+					<img src="/static/images/icons/icon-2.svg" alt="" width=48>
+					<img src="/static/images/icons/icon-3.svg" alt="" width=48>
+					<img src="/static/images/icons/icon-4.svg" alt="" width=48>
+					<img src="/static/images/icons/icon-5.svg" alt="" width=48>
+					<img src="/static/images/icons/icon-6.svg" alt="" width=48>
+					<img src="/static/images/icons/icon-7.svg" alt="" width=48>
+					<img src="/static/images/icons/icon-8.svg" alt="" width=48>
+				</div>
+				<div class="grid-item">
+					<div id="graph_weather" class="chart"></div>
 				</div>
 			</div>
 			</main> <!-- .main-content -->
 
+			
 			<footer class="site-footer">
 				<div class="container">
 					<div class="row">
@@ -210,6 +193,11 @@
 					$("#longtitudeArea").removeClass("d-none");
 				});
 			}
+		</script>
+		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+		<script type="text/javascript">
+			var graph_weather = {{ graph_weather| safe}};
+			Plotly.plot('graph_weather',graph_weather,{});    
 		</script>
 	</body>
 
