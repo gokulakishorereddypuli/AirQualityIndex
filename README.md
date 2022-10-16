@@ -31,6 +31,4 @@ AQI od Delhi
 # Weather Forecasting
 ![image](https://user-images.githubusercontent.com/94065306/196036126-716ab182-c4e2-4ed7-b4b6-bd7781571b0c.png)
 
-![image](https://user-images.githubusercontent.com/94065306/196036155-2c2d3b8a-e3c2-48db-9588-e3acead89841.png)
-
-
+![image](https://user-images.githubusercontent.com/94065306/196036262-34648833-1d0b-46e6-a404-f939aff40bb3.png)
