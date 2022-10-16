@@ -76,7 +76,7 @@
 								<div class="degree">
 									<div class="num">{{ today['temp'] }}<sup>o</sup>C</div>
 									<div class="forecast-icon">
-										{% if today['temp'] > 24 and today['temp'] <36 %}
+										<!-- {% if today['temp'] > 24 and today['temp'] <36 %}
 										<img src="/static/images/icons/icon-2.svg" alt="" width=90>
 										{% endif %}
 										{% if today['temp'] > 22 and today['temp'] <34 %}
@@ -93,15 +93,10 @@
 										{% endif %}
 										{% if today['temp'] > 10 and today['temp'] <20 %}
 										<img src="/static/images/icons/icon-7.svg" alt="" width=90>
-										{% endif %}
+										{% endif %} -->
 										
 									</div>	
 								</div>
-<<<<<<< HEAD
-								 
-=======
-								
->>>>>>> 9d415b64322d3e851fdc0d3d667055c88bb7ef67
 							</div>
 						</div>
 
@@ -114,32 +109,21 @@
 							</div> <!-- .forecast-header -->
 							<div class="forecast-content">
 								<div class="forecast-icon">
-<<<<<<< Updated upstream
-									
-
-=======
-								
->>>>>>> Stashed changes
 								</div>
 
 								{% set description = weather['weather'][obj].split("'")  %}
 								{% if description[9] == 'Overcast clouds' %}
 								<img src="/static/images/icons/icon-6.svg" alt="" width=48>
-								{%endif%}
-								{% if description[9] == 'Broken clouds' %}
+								{% elif description[9] == 'Broken clouds' %}
 								<img src="/static/images/icons/icon-7.svg" alt="" width=48>
-								{%endif%}
-								{% if description[9] == 'Few clouds' %}
+								
+								{% elif description[9] == 'Few clouds' %}
 								<img src="/static/images/icons/icon-5.svg" alt="" width=48>
-								{%endif%}
-								{% if description[9] == 'Broken clouds' %}
-								<img src="/static/images/icons/icon-7.svg" alt="" width=48>
-								{%endif%}
-								{% if description[9] == 'Broken clouds' %}
-                                
-
-
-								<img src="/static/images/icons/icon-7.svg" alt="" width=48>
+								
+								{% elif description[9] == 'Scattered clouds' %}
+								<img src="/static/images/icons/icon-4.svg" alt="" width=48>
+								{% else %}
+								<img src="/static/images/icons/icon-2.svg" alt="" width=48>
 								{%endif%}
 								<div class="degree">{{ weather['temp'][obj] }}<sup>o</sup>C</div>
 								{{ description[9] }}
@@ -156,14 +140,14 @@
 					</div>
 				</div>
 				<div>
-					<img src="/static/images/icons/icon-1.svg" alt="" width=48>
+					<!-- <img src="/static/images/icons/icon-1.svg" alt="" width=48>
 					<img src="/static/images/icons/icon-2.svg" alt="" width=48>
 					<img src="/static/images/icons/icon-3.svg" alt="" width=48>
 					<img src="/static/images/icons/icon-4.svg" alt="" width=48>
 					<img src="/static/images/icons/icon-5.svg" alt="" width=48>
 					<img src="/static/images/icons/icon-6.svg" alt="" width=48>
 					<img src="/static/images/icons/icon-7.svg" alt="" width=48>
-					<img src="/static/images/icons/icon-8.svg" alt="" width=48>
+					<img src="/static/images/icons/icon-8.svg" alt="" width=48> -->
 					
 				</div>
 				<div class="grid-item">
@@ -192,7 +176,7 @@
 						</div>
 					</div>
 
-					<p class="colophon">Copyright 2014 Company name. Designed by Themezy. All rights reserved</p>
+					<p class="colophon">All rights reserved</p>
 				</div>
 			</footer> <!-- .site-footer -->
 		</div>

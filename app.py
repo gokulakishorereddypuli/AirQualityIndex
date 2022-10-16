@@ -204,6 +204,7 @@ def login():
     if flask.request.method == 'GET': 
         df=pd.read_csv('files/datasets/weather.csv')
         weather=weatherdays(df)
+        print(df)
         df=df[['timestamp_local','temp']]
         df=df.rename(columns={'timestamp_local':'Timeline','temp':'Temperature'})
         fig = px.line(df, x="Timeline", y="Temperature",title="Weather Forecasting (Celsius)")
@@ -217,16 +218,16 @@ def login():
 
 @app.route('/news')    
 def news():
-    return render_template('news.html')
+    return render_template('404.html')
 @app.route('/contact')    
 def contact():
-    return render_template('contact.html')
+    return render_template('404.html')
 @app.route('/live-cameras')    
 def live_cameras():
-    return render_template('live-cameras.html')
+    return render_template('404.html')
 @app.route('/photos')    
 def photos():
-    return render_template('photos.html')
+    return render_template('404.html')
 
 
 
@@ -310,6 +311,11 @@ def aqi():
                                                          'PM10': {'max':df['PM10'].max(), 'min':df['PM10'].min(),'avg':df['PM10'].mean() } },
                                                          AQI={'max':df['AQI'].max(),'avg':df['AQI'].mean(),'min':df['AQI'].min()},month=month,date=da,graph_aqi=graph_aqi,graph_so2=graph_so2,graph_no2=graph_no2,graph_o3=graph_o3,graph_co=graph_co,graph_pm10=graph_pm10,graph_pm25=graph_pm25)
 """
+
+
+
+
+
             print(e)
             loc=location1
             print(loc)
@@ -343,6 +349,11 @@ def aqi():
                                                          'PM2.5': {'max':df['PM2.5'].max(), 'min':df['PM2.5'].min(),'avg':df['PM2.5'].mean() },
                                                          'PM10': {'max':df['PM10'].max(), 'min':df['PM10'].min(),'avg':df['PM10'].mean() } },
                                                          AQI={'max':df['AQI'].max(),'avg':df['AQI'].mean(),'min':df['AQI'].min()},month=month,date=da,graph_aqi=graph_aqi,graph_so2=graph_so2,graph_no2=graph_no2,graph_o3=graph_o3,graph_co=graph_co,graph_pm10=graph_pm10,graph_pm25=graph_pm25)
+            
+
+
+
+
             
         """          
 @app.route('/find-aqi-of-place',methods=['POST'])
