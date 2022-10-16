@@ -153,6 +153,9 @@
 				<div class="grid-item">
 					<div id="graph_weather" class="chart"></div>
 				</div>
+				<div class="grid-item">
+					<div id="graph_weather1" class="chart"></div>
+				</div>
 			</div>
 			</main> <!-- .main-content -->
 
@@ -210,9 +213,13 @@
 			}
 		</script>
 		<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-		<script type="text/javascript">
+		<!-- <script type="text/javascript">
 			var graph_weather = {{ graph_weather| safe}};
 			Plotly.plot('graph_weather',graph_weather,{});    
+		</script> -->
+		<script type="text/javascript">
+			var graph_weather1 = {{ graph_weather1| safe}};
+			Plotly.plot('graph_weather',graph_weather1,{});    
 		</script>
 	</body>
 

@@ -100,14 +100,14 @@
 									<style>
 										table,tr,td
 										{
-											border: 2px dotted white;
-											padding: 10px;
+											border: 1px dotted white;
+											padding: 5px;
 											text-align: center;
 										}
 										table
 										{
 											float: right;
-											margin: 50px;
+											margin: 20px;
 										}
 									</style>
 									<table>
@@ -120,9 +120,9 @@
 								{% for obj in data %} 
 								<tr>
 									<td>{{obj}}</td>
-									<td>{{data[obj]['min']}}</td>
-									<td>{{data[obj]['avg']}}</td>
-									<td>{{data[obj]['max']}}</td>
+									<td>{{ data[obj]['min']|round(2)}}</td>
+									<td>{{ data[obj]['avg']|round(2)}}</td>
+									<td>{{ data[obj]['max']|round(2)}}</td>
 									
 								</tr>
 					
@@ -180,17 +180,10 @@
 								<input type="submit" value="Subscribe">
 							</form>
 						</div>
-						<div class="col-md-3 col-md-offset-1">
-							<div class="social-links">
-								<a href="#"><i class="fa fa-facebook"></i></a>
-								<a href="#"><i class="fa fa-twitter"></i></a>
-								<a href="#"><i class="fa fa-google-plus"></i></a>
-								<a href="#"><i class="fa fa-pinterest"></i></a>
-							</div>
-						</div>
+						
 					</div>
 
-					<p class="colophon">Copyright 2014 Company name. Designed by Themezy. All rights reserved</p>
+					
 				</div>
 			</footer> <!-- .site-footer -->
 		</div>
