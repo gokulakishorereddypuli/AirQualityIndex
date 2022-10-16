@@ -16,9 +16,11 @@ Air pollution represents a serious environmental problem. Each year, millions pr
 
 
 # Final Outputs
+
 Air Quality Index of Delhi
+
 ![image](https://user-images.githubusercontent.com/94065306/196035880-60e400b4-e72e-4469-a457-e1ecb651dc22.png)
-                                  Air Quality Index of Delhi
+
 AQI od Delhi
 
 ![image](https://user-images.githubusercontent.com/94065306/196036056-8a5f75f1-6d70-4d5e-8d84-cbb45c91f718.png)
