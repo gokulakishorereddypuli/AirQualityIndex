@@ -209,7 +209,7 @@ def login():
         df=df.rename(columns={'timestamp_local':'Timeline','temp':'Temperature'})
         fig = px.line(df, x="Timeline", y="Temperature",title="Weather Forecasting (Celsius)")
         graph_weather = json.dumps(fig,cls=plotly.utils.PlotlyJSONEncoder)
-        fig1 = px.line(weather, x="Day", y="temp",title="Weather Forecasting (Celsius)")
+        fig1 = px.line(weather, x="Day", y="temp",title="Weather Forecasting (Celsius) of Delhi")
         graph_weather1 = json.dumps(fig1,cls=plotly.utils.PlotlyJSONEncoder)
         return render_template('index.html',weather=weather.iloc[1:7],graph_weather=graph_weather,today=weather.iloc[0],graph_weather1=graph_weather1)
     else:
