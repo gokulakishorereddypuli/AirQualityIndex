@@ -12,10 +12,5 @@ Air pollution represents a serious environmental problem. Each year, millions pr
 
 
 
-<object width="425" height="350">
-  <param name="movie" value="http://www.youtube.com/user/wwwLoveWatercom?v=BTRN1YETpyg" />
-  <param name="wmode" value="transparent" />
-  <embed src="http://www.youtube.com/user/wwwLoveWatercom?v=BTRN1YETpyg"
-         type="application/x-shockwave-flash"
-         wmode="transparent" width="425" height="350" />
-</object>
+
+![Screenshot (214)](https://user-images.githubusercontent.com/94065306/196035532-ae86dcd0-81d2-4ed3-b704-e481812d5fca.png)
