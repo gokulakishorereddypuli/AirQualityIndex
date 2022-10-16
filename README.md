@@ -19,7 +19,8 @@ Air Quality Index of Delhi
 ![image](https://user-images.githubusercontent.com/94065306/196035880-60e400b4-e72e-4469-a457-e1ecb651dc22.png)
 
 AQI od Delhi
-![image](https://user-images.githubusercontent.com/94065306/196035948-1884008c-3ef7-4eef-9577-c10102720425.png)
+
+![image](https://user-images.githubusercontent.com/94065306/196036056-8a5f75f1-6d70-4d5e-8d84-cbb45c91f718.png)
 
 ![image](https://user-images.githubusercontent.com/94065306/196035975-0906e46b-ffe1-430c-ab4a-a912b596790b.png)
 
