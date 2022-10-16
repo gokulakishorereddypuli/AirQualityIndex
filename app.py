@@ -235,6 +235,7 @@ def aqi():
         global location1
     
         if flask.request.method == 'POST':  
+            print(request.args.get('location'))
             x = [x for x in request.form.values()]
             print(x)
             location=x[0]
@@ -346,7 +347,7 @@ def aqi():
         """          
 @app.route('/find-aqi-of-place',methods=['POST'])
 def find_aqi():
-    print(request.get_data)
+    #print(request.get_data)
     x = [request.form['autocomplete'],request.form['latitude'],request.form['longitude']]
     print(x)
     if(len(x[1])>0 and len(x[2])>0):

@@ -114,15 +114,45 @@
 							</div> <!-- .forecast-header -->
 							<div class="forecast-content">
 								<div class="forecast-icon">
+<<<<<<< Updated upstream
 									
 
-								</div>
-								<div class="degree">{{ weather['temp'][obj] }}<sup>o</sup>C</div>
+=======
 								
+>>>>>>> Stashed changes
+								</div>
+
+								{% set description = weather['weather'][obj].split("'")  %}
+								{% if description[9] == 'Overcast clouds' %}
+								<img src="/static/images/icons/icon-6.svg" alt="" width=48>
+								{%endif%}
+								{% if description[9] == 'Broken clouds' %}
+								<img src="/static/images/icons/icon-7.svg" alt="" width=48>
+								{%endif%}
+								{% if description[9] == 'Few clouds' %}
+								<img src="/static/images/icons/icon-5.svg" alt="" width=48>
+								{%endif%}
+								{% if description[9] == 'Broken clouds' %}
+								<img src="/static/images/icons/icon-7.svg" alt="" width=48>
+								{%endif%}
+								{% if description[9] == 'Broken clouds' %}
+                                
+
+
+								<img src="/static/images/icons/icon-7.svg" alt="" width=48>
+								{%endif%}
+								<div class="degree">{{ weather['temp'][obj] }}<sup>o</sup>C</div>
+								{{ description[9] }}
+
+								
+					  
 							</div>
 							
 						</div>
+						
 						{% endfor %}
+						
+								
 					</div>
 				</div>
 				<div>
@@ -134,6 +164,7 @@
 					<img src="/static/images/icons/icon-6.svg" alt="" width=48>
 					<img src="/static/images/icons/icon-7.svg" alt="" width=48>
 					<img src="/static/images/icons/icon-8.svg" alt="" width=48>
+					
 				</div>
 				<div class="grid-item">
 					<div id="graph_weather" class="chart"></div>
